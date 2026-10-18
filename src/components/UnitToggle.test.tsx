@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { http, HttpResponse } from 'msw'
+import { delay, http, HttpResponse } from 'msw'
 import { createMemoryRouter } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
 import { routes } from '../router'
@@ -53,6 +53,25 @@ describe('unit controls', () => {
       'celsius',
       'fahrenheit',
     ])
+  })
+
+  it('keeps the card on screen, in its old units, while the new units load', async () => {
+    unitAwareForecast()
+    renderApp('/city/51.5/-0.12?name=London')
+    expect(await screen.findByText('14°C')).toBeInTheDocument()
+
+    server.use(
+      http.get(FORECAST_URL, async () => {
+        await delay(100)
+        return HttpResponse.json(forecastFixture)
+      }),
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Switch to Fahrenheit' }))
+
+    expect(screen.queryByLabelText('Loading current weather')).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'London' })).toBeInTheDocument()
+    expect(screen.getByText('14°C')).toBeInTheDocument()
+    expect(await screen.findByText('14°F')).toBeInTheDocument()
   })
 
   it('settings radios change wind units on the city page', async () => {

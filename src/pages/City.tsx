@@ -6,7 +6,6 @@ import { CurrentWeatherSkeleton } from '../components/current/CurrentWeatherSkel
 import { ErrorState } from '../components/current/ErrorState'
 import { useForecast } from '../hooks/useForecast'
 import { useNow } from '../hooks/useNow'
-import { useAppStore } from '../store/useAppStore'
 import { minutesAgo } from '../utils/format'
 
 const APP_NAME = 'SweaterWeather'
@@ -18,7 +17,6 @@ export function City() {
   const lon = Number(params.lon)
   const name = search.get('name')?.trim() || `${params.lat}, ${params.lon}`
 
-  const units = useAppStore((s) => s.units)
   const now = useNow()
   const forecast = useForecast(lat, lon)
 
@@ -57,7 +55,7 @@ export function City() {
     <CurrentWeather
       name={name}
       current={forecast.data.current}
-      units={units}
+      units={forecast.units}
       updatedMinutes={minutesAgo(forecast.dataUpdatedAt, now)}
       isRefetching={forecast.isFetching}
     />

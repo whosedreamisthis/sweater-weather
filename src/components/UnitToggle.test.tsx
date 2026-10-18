@@ -74,17 +74,17 @@ describe('unit controls', () => {
     expect(await screen.findByText('14°F')).toBeInTheDocument()
   })
 
-  it('settings radios change wind units on the city page', async () => {
+  it('settings modal radios change wind units on the city page', async () => {
     const requests = unitAwareForecast()
-    renderApp('/settings')
+    renderApp('/city/51.5/-0.12?name=London')
+    expect(await screen.findByText('12 km/h SW')).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Settings' }))
 
     expect(screen.getByRole('radio', { name: '°C' })).toBeChecked()
     await userEvent.click(screen.getByRole('radio', { name: 'mph' }))
     expect(screen.getByRole('radio', { name: 'mph' })).toBeChecked()
     expect(useAppStore.getState().units.wind).toBe('mph')
 
-    const router = createMemoryRouter(routes, { initialEntries: ['/city/51.5/-0.12?name=London'] })
-    renderWithProviders(<RouterProvider router={router} />, { router: false })
     expect(await screen.findByText('7 mph SW')).toBeInTheDocument()
     expect(requests.at(-1)?.searchParams.get('wind_speed_unit')).toBe('mph')
   })

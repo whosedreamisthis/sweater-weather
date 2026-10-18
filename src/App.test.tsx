@@ -26,17 +26,28 @@ describe('app shell', () => {
     expect(screen.getByRole('main')).toContainElement(screen.getByRole('combobox'))
     unmount()
 
-    renderApp('/settings')
+    renderApp('/city/51.5/-0.12')
     expect(screen.getAllByRole('combobox', { name: 'Search for a city' })).toHaveLength(1)
     expect(screen.getByRole('banner')).toContainElement(screen.getByRole('combobox'))
   })
 
-  it('navigates to settings', async () => {
+  it('opens settings as a modal and closes it with Escape, restoring focus', async () => {
     renderApp()
+    const trigger = screen.getByRole('button', { name: 'Settings' })
 
-    await userEvent.click(screen.getByRole('link', { name: 'Settings' }))
+    await userEvent.click(trigger)
+    expect(screen.getByRole('dialog', { name: 'Settings' })).toHaveAttribute('aria-modal', 'true')
 
-    expect(screen.getByRole('heading', { name: 'Settings' })).toBeInTheDocument()
+    await userEvent.keyboard('{Escape}')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(trigger).toHaveFocus()
+  })
+
+  it('closes settings from the close button', async () => {
+    renderApp()
+    await userEvent.click(screen.getByRole('button', { name: 'Settings' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Close settings' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('reads coordinates on the city route', async () => {

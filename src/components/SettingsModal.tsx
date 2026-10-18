@@ -1,0 +1,114 @@
+import { useEffect, useRef } from 'react'
+import type { Units } from '../api/types'
+import { useAppStore } from '../store/useAppStore'
+import styles from './SettingsModal.module.css'
+
+type Option<K extends keyof Units> = { value: Units[K]; label: string }
+
+const TEMPERATURE: Option<'temperature'>[] = [
+  { value: 'celsius', label: '°C' },
+  { value: 'fahrenheit', label: '°F' },
+]
+const WIND: Option<'wind'>[] = [
+  { value: 'kmh', label: 'km/h' },
+  { value: 'mph', label: 'mph' },
+]
+const PRECIPITATION: Option<'precipitation'>[] = [
+  { value: 'mm', label: 'mm' },
+  { value: 'inch', label: 'in' },
+]
+
+function UnitGroup<K extends keyof Units>({
+  legend,
+  name,
+  options,
+}: {
+  legend: string
+  name: K
+  options: Option<K>[]
+}) {
+  const current = useAppStore((s) => s.units[name])
+  const setUnits = useAppStore((s) => s.setUnits)
+
+  return (
+    <fieldset className={styles.group}>
+      <legend className={styles.legend}>{legend}</legend>
+      <div className={styles.segments}>
+        {options.map((option) => (
+          <label key={option.value} className={styles.segment}>
+            <input
+              type="radio"
+              className={styles.input}
+              name={name}
+              value={option.value}
+              checked={current === option.value}
+              onChange={() => setUnits({ [name]: option.value })}
+            />
+            {option.label}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  )
+}
+
+type Props = { onClose: () => void }
+
+const FOCUSABLE = 'button, input, [href], [tabindex]:not([tabindex="-1"])'
+
+export function SettingsModal({ onClose }: Props) {
+  const dialogRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null
+    dialogRef.current?.querySelector<HTMLElement>(FOCUSABLE)?.focus()
+    return () => previouslyFocused?.focus()
+  }, [])
+
+  function onKeyDown(event: React.KeyboardEvent) {
+    if (event.key === 'Escape') {
+      onClose()
+      return
+    }
+    if (event.key !== 'Tab') return
+    // Keep Tab inside the dialog.
+    const items = [...(dialogRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? [])]
+    const first = items[0]
+    const last = items[items.length - 1]
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault()
+      last.focus()
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault()
+      first.focus()
+    }
+  }
+
+  return (
+    <div
+      className={styles.backdrop}
+      onMouseDown={(event) => event.target === event.currentTarget && onClose()}
+    >
+      <div
+        ref={dialogRef}
+        className={styles.dialog}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settings-title"
+        onKeyDown={onKeyDown}
+      >
+        <div className={styles.head}>
+          <h2 id="settings-title" className={styles.title}>
+            Settings
+          </h2>
+          <button type="button" className={styles.close} onClick={onClose} aria-label="Close settings">
+            ×
+          </button>
+        </div>
+        <UnitGroup legend="Temperature" name="temperature" options={TEMPERATURE} />
+        <UnitGroup legend="Wind speed" name="wind" options={WIND} />
+        <UnitGroup legend="Precipitation" name="precipitation" options={PRECIPITATION} />
+      </div>
+    </div>
+  )
+}

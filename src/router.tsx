@@ -3,7 +3,6 @@ import { Layout } from './components/Layout'
 import { City } from './pages/City'
 import { Home } from './pages/Home'
 import { NotFound } from './pages/NotFound'
-import { Settings } from './pages/Settings'
 
 export const routes: RouteObject[] = [
   {
@@ -11,7 +10,6 @@ export const routes: RouteObject[] = [
     children: [
       { path: '/', element: <Home /> },
       { path: '/city/:lat/:lon', element: <City /> },
-      { path: '/settings', element: <Settings /> },
       { path: '*', element: <NotFound /> },
     ],
   },

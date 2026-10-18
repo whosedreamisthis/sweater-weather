@@ -59,3 +59,54 @@
   outline: 2px solid var(--color-primary);
   outline-offset: -2px;
 }
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: rgb(20 33 61 / 0.5);
+}
+
+.dialog {
+  width: 100%;
+  max-width: 440px;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: var(--space-5, 1.5rem);
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 40px rgb(20 33 61 / 0.3);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.close {
+  width: 2.25rem;
+  height: 2.25rem;
+  font: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.close:hover {
+  background: var(--color-border);
+}

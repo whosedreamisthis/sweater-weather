@@ -80,6 +80,12 @@ Stack: Vite, React, TypeScript, TanStack Query, Zustand, React Router (hash), CS
 - Types: PascalCase (no `I` or `T` prefix)
 - CSS Module classes: camelCase (`styles.cardTitle`)
 
+## Building a Feature
+
+- Features with UI are built in two passes: first the static UI (markup, styles, responsive layout) so there is something to see on the page, then the behaviour
+- Add behaviour one goal at a time (e.g. data, then selection, then keyboard, then clear/outside click), with tests and a passing `npm test`, lint and build after each step
+- Keep each step runnable: no half-wired props or dead handlers left in between
+
 ## Testing
 
 - **Vitest + React Testing Library + MSW**: `npm test` runs once, `npm run test:watch` watches

@@ -20,6 +20,17 @@ describe('app shell', () => {
     expect(screen.getByRole('heading', { name: 'Home' })).toBeInTheDocument()
   })
 
+  it('shows a single search box: in the page on home, in the header elsewhere', () => {
+    const { unmount } = renderApp('/')
+    expect(screen.getAllByRole('combobox', { name: 'Search for a city' })).toHaveLength(1)
+    expect(screen.getByRole('main')).toContainElement(screen.getByRole('combobox'))
+    unmount()
+
+    renderApp('/settings')
+    expect(screen.getAllByRole('combobox', { name: 'Search for a city' })).toHaveLength(1)
+    expect(screen.getByRole('banner')).toContainElement(screen.getByRole('combobox'))
+  })
+
   it('navigates to settings', async () => {
     renderApp()
 

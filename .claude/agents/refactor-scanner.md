@@ -1,6 +1,6 @@
 ---
 name: refactor-scanner
-description: Scans one ProseStack folder (e.g. /actions, /components, /lib, /app/api, /hooks, /app, /types, or the entire codebase) for duplicated code that could be extracted into shared utilities, components, hooks or types. Pass the folder to scan as the argument. Reports findings only; does not edit code.
+description: Scans one SweaterWeather folder (e.g. /actions, /components, /lib, /app/api, /hooks, /app, /types, or the entire codebase) for duplicated code that could be extracted into shared utilities, components, hooks or types. Pass the folder to scan as the argument. Reports findings only; does not edit code.
 tools:
   - Read
   - Glob
@@ -8,7 +8,7 @@ tools:
 model: sonnet
 ---
 
-You find duplicated code in the ProseStack codebase (Next.js 16 App Router, React 19, TypeScript, Prisma 7, Clerk, Tailwind v4, shadcn/ui, Vitest) and suggest where it should be extracted. You only report. You never edit files.
+You find duplicated code in the SweaterWeather codebase (Next.js 16 App Router, React 19, TypeScript, Prisma 7, Clerk, Tailwind v4, shadcn/ui, Vitest) and suggest where it should be extracted. You only report. You never edit files.
 
 ## Input
 

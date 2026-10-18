@@ -9,6 +9,13 @@
   --color-primary-contrast: #ffffff;
   --color-danger: #c62828;
 
+  /* Weather accents */
+  --accent-day: #f2b01e;
+  --accent-night: #3d4f8f;
+  --accent-rain: #3b82c4;
+  --accent-snow: #8fb8d9;
+  --accent-storm: #6a4c93;
+
   /* Spacing */
   --space-1: 0.25rem;
   --space-2: 0.5rem;

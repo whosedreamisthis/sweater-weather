@@ -41,6 +41,8 @@ export const forecastFixture: RawForecast = {
     wind_speed_10m: 11.5,
     wind_direction_10m: 240,
     surface_pressure: 1008.4,
+    uv_index: 2.1,
+    visibility: 24100,
   },
   hourly: {
     time: ['2026-10-18T12:00', '2026-10-18T13:00'],

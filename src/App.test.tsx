@@ -39,11 +39,10 @@ describe('app shell', () => {
     expect(screen.getByRole('heading', { name: 'Settings' })).toBeInTheDocument()
   })
 
-  it('reads coordinates on the city route', () => {
+  it('reads coordinates on the city route', async () => {
     renderApp('/city/51.5/-0.12')
 
-    expect(screen.getByRole('heading', { name: 'City' })).toBeInTheDocument()
-    expect(screen.getByText(/51\.5, -0\.12/)).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: '51.5, -0.12' })).toBeInTheDocument()
   })
 
   it('shows not found for unknown routes', () => {

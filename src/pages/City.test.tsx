@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router'
 import { server } from '../test/server'
 import { FORECAST_URL, forecastFixture } from '../test/handlers'
 import { renderWithProviders } from '../test/renderWithProviders'
+import { DEFAULT_UNITS, useAppStore } from '../store/useAppStore'
 import { City } from './City'
 
 function renderCity(route: string) {
@@ -17,6 +18,8 @@ function renderCity(route: string) {
 }
 
 describe('City page', () => {
+  beforeEach(() => useAppStore.setState({ units: DEFAULT_UNITS }))
+
   it('renders every current-conditions field and sets the page title', async () => {
     renderCity('/city/51.5/-0.12?name=London')
 

@@ -24,6 +24,9 @@ export type CurrentWeather = {
   windSpeed: number
   windDirection: number
   pressure: number
+  uvIndex: number
+  /** Metres; null when the service has no reading. */
+  visibility: number | null
 }
 
 export type HourlyPoint = {

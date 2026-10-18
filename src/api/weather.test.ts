@@ -19,7 +19,17 @@ describe('transformForecast', () => {
       windSpeed: 11.5,
       windDirection: 240,
       pressure: 1008.4,
+      uvIndex: 2.1,
+      visibility: 24100,
     })
+  })
+
+  it('keeps a missing visibility reading as null instead of 0', () => {
+    const noReading = transformForecast({
+      ...forecastFixture,
+      current: { ...forecastFixture.current, visibility: null },
+    })
+    expect(noReading.current.visibility).toBeNull()
   })
 
   it('turns hourly columns into rows, defaulting null probability to 0', () => {

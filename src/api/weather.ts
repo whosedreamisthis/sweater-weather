@@ -4,7 +4,7 @@ import type { CurrentWeather, DailyPoint, Forecast, HourlyPoint, Units } from '.
 const FORECAST_URL = 'https://api.open-meteo.com/v1/forecast'
 
 const CURRENT_VARS =
-  'temperature_2m,apparent_temperature,relative_humidity_2m,is_day,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure'
+  'temperature_2m,apparent_temperature,relative_humidity_2m,is_day,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,uv_index,visibility'
 const HOURLY_VARS = 'temperature_2m,precipitation_probability,weather_code'
 const DAILY_VARS =
   'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset,uv_index_max'
@@ -23,6 +23,8 @@ export type RawForecast = {
     wind_speed_10m: number
     wind_direction_10m: number
     surface_pressure: number
+    uv_index: number | null
+    visibility: number | null
   }
   hourly: {
     time: string[]
@@ -59,6 +61,8 @@ function transformCurrent(c: RawForecast['current']): CurrentWeather {
     windSpeed: c.wind_speed_10m,
     windDirection: c.wind_direction_10m,
     pressure: c.surface_pressure,
+    uvIndex: c.uv_index ?? 0,
+    visibility: c.visibility,
   }
 }
 

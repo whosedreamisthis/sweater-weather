@@ -16,7 +16,7 @@ This is the common workflow that we will use for every single feature/fix:
 1. **Document** - Document the feature in @context/current-feature.md.
 2. **Branch** - Create new branch for feature, fix, etc
 3. **Implement** - Implement the feature/fix that I create in @context/current-feature.md. implement one feature goal at a time, show me which goal is being implemented when you are asking permission to make changes.
-4. **Test** - Write Vitest unit tests for new or changed server actions and utilities (not components), where there is logic worth testing. Run `npm test` and `npm run build` and fix any failures. I verify the feature in the browser
+4. **Test** - Write Vitest tests for new or changed utilities, hooks and components, where there is logic worth testing. Run `npm test` and `npm run build` and fix any failures. I verify the feature in the browser
 5. **Iterate** - Iterate and change things if needed
 6. **Commit** - Only after build passes and everything works. create a verbose commit message, don't include that claude co authored feature.
 7. **Merge** - Merge to main
@@ -56,7 +56,7 @@ We will create a new branch for every feature/fix. Name branch **feature/[featur
 
 Review AI-generated code periodically, especially for:
 
-- Security (auth checks, input validation)
-- Performance (unnecessary re-renders, N+1 queries)
-- Logic errors (edge cases)
+- Input validation (coordinates, search text, URL params)
+- Performance (unnecessary re-renders, redundant requests, query-key correctness)
+- Logic errors (edge cases, timezones, unit conversion)
 - Patterns (matches existing codebase?)

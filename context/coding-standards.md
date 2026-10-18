@@ -1,107 +1,108 @@
 # Coding Standards
 
+Stack: Vite, React, TypeScript, TanStack Query, Zustand, React Router (hash), CSS Modules, Vitest + React Testing Library + MSW.
+
 ## TypeScript
 
 - Strict mode enabled
 - No `any` types - use proper typing or `unknown`
-- Define interfaces for all props, API responses, and data models
+- Define types for all props, API responses, and data models
 - Use type inference where obvious, explicit types where helpful
+- Use `import type` for type-only imports (`verbatimModuleSyntax` is on)
+- No enums (`erasableSyntaxOnly`): use string unions or `as const` objects
 
 ## React
 
 - Functional components only (no class components)
 - Use hooks for state and side effects
 - Keep components focused - one job per component
-- Extract reusable logic into custom hooks
+- Extract reusable logic into custom hooks in `src/hooks/`
+- Components are presentational: no `fetch` calls inside components
+- Prefer derived values over `useEffect` + `useState` syncing
 
-## Next.js
+## State
 
-- Server components by default
-- Only use `'use client'` when needed (interactivity, hooks, browser APIs)
-- Use Server Actions for form submissions and simple mutations
-- Use API routes when you need:
-  - Webhooks (Stripe, GitHub, etc.)
-  - File uploads with progress tracking
-  - Long-running operations
-  - Specific HTTP status codes or headers
-  - Endpoints for future mobile/CLI clients
-  - Third-party integrations
-- Otherwise, fetch data directly in server components
-- Dynamic routes for item/collection pages
-
-## Tailwind CSS v4
-
-**CRITICAL**: We are using Tailwind CSS v4, which uses CSS-based configuration.
-
-- **DO NOT** create `tailwind.config.ts` or `tailwind.config.js` files (those are for v3)
-- All theme configuration must be done in CSS using the `@theme` directive in `app/globals.css`
-- Use CSS custom properties for colors, spacing, etc.
-- No JavaScript-based config allowed
-
-Example v4 configuration:
-
-```css
-@import "tailwindcss";
-
-@theme {
-  --color-primary: oklch(50% 0.2 250);
-}
-```
-
-## File Organization
-
-- Components: `components/[feature]/ComponentName.tsx`
-- Pages: `app/[route]/page.tsx`
-- Server Actions: `actions/[feature].ts`
-- Types: `types/[feature].ts`
-- Lib/Utils: `lib/[utility].ts`
-
-## Naming
-
-- Components: PascalCase (`ItemCard.tsx`)
-- Files: Match component name or kebab-case
-- Functions: camelCase
-- Constants: SCREAMING_SNAKE_CASE
-- Types/Interfaces: PascalCase (no prefix)
-
-## Styling
-
-- Tailwind CSS for all styling
-- Use shadcn/ui components where applicable
-- No inline styles
-- Dark mode first, light mode as option
-
-## Database
-
-- Use Prisma ORM for all database operations
-- Always use `prisma migrate dev` for schema changes (not `db push`)
-- Run `prisma migrate status` before committing to verify migrations are in sync
-- Production deployments must run `prisma migrate deploy` before the app starts
+- **Server state** (weather, geocoding) lives only in TanStack Query. Never copy query data into Zustand or component state
+- **Client state** (units, favorites, theme) lives in Zustand, persisted with the `persist` middleware
+- **Shareable state** (selected city) lives in the URL
+- Select the smallest slice from a Zustand store (`useStore(s => s.units)`), never the whole store
+- Wrap `localStorage` access in try/catch; the app must work without it
 
 ## Data Fetching
 
-- Server components fetch directly with Prisma
-- Client components use Server Actions
-- Validate all inputs with Zod
+- API functions live in `src/api/`, one file per external API; they return typed, row-oriented objects (transform Open-Meteo's column arrays there)
+- Throw a typed `ApiError` (with numeric `status`) on non-2xx responses and network failure
+- Wrap each query in a hook in `src/hooks/` (`useForecast`, `useCitySearch`); components consume the hook, not `useQuery` directly
+- Query keys are arrays starting with the resource name and include every input, e.g. `['weather', lat, lon, units]`
+- Every data-driven component handles loading (skeleton), error (message + Retry) and empty states
+- Validate coordinates and user input before making a request
 
-## Error Handling
+## Routing
 
-- Use try/catch in Server Actions
-- Return `{ success, data, error }` pattern from actions
-- Display user-friendly error messages via toast
+- Use `createHashRouter` (GitHub Pages has no server rewrites)
+- Routes are defined in `src/router.tsx`; page components live in `src/pages/`
+- Import `RouterProvider` from `react-router/dom`, everything else from `react-router`
+- Invalid route params render an error state, never crash
+
+## Styling
+
+- CSS Modules for all component styling: `ComponentName.module.css` next to the component
+- Global tokens (colors, spacing, radius, font) are CSS custom properties in `src/index.css`; use `var(--token)`, no hardcoded colors or spacing in modules
+- Theme switching via `data-theme` on `<html>` overriding the tokens
+- No inline styles except truly dynamic values (e.g. a computed bar width)
+- Mobile first: base styles for small screens, `min-width` media queries for larger
+- Use semantic HTML and meet WCAG AA contrast in both themes
+
+## Accessibility
+
+- Every input has a label; icon-only buttons have `aria-label`
+- Keyboard operable; visible focus styles
+- Loading and error updates announced with `aria-live`
+- Never convey information by color or icon alone
+
+## File Organization
+
+- Components: `src/components/[feature]/ComponentName.tsx` + `.module.css` (shared shell pieces may sit directly in `components/`)
+- Pages: `src/pages/PageName.tsx`
+- Hooks: `src/hooks/useThing.ts`
+- API clients and types: `src/api/`
+- Zustand store: `src/store/`
+- Pure helpers: `src/utils/`
+- Test helpers, MSW handlers and setup: `src/test/`
+
+## Naming
+
+- Components: PascalCase (`HourlyList.tsx`)
+- Hooks: `useCamelCase`
+- Other files: camelCase (`weatherCodes.ts`)
+- Functions: camelCase
+- Constants: SCREAMING_SNAKE_CASE
+- Types: PascalCase (no `I` or `T` prefix)
+- CSS Module classes: camelCase (`styles.cardTitle`)
 
 ## Testing
 
-- Unit tests use **Vitest** (`vitest.config.ts`): `npm test` runs once, `npm run test:watch` watches
-- Test server actions and utilities only, not components or pages
-- Name test files `*.test.ts` and put them next to the code they test (e.g. `lib/tokens.test.ts`, `actions/profile.test.ts`); Vitest collects `**/*.test.ts` outside `node_modules` and `.next`
-- Import `describe`, `it`, `expect` and `vi` from `vitest` explicitly (no globals)
-- Never hit the database, email or Redis in unit tests: mock dependencies such as `@/auth`, `@/lib/db` and `next/headers` with `vi.mock`
-- Cover the happy path and the error cases (no session, invalid input, failures); don't write tests just to write them
-- Mocks and `vi.stubEnv` values are reset before each test by the config
+- **Vitest + React Testing Library + MSW**: `npm test` runs once, `npm run test:watch` watches
+- Test files sit next to the code: `*.test.ts` / `*.test.tsx`
+- Globals (`describe`, `it`, `expect`, `vi`) are enabled; do not import them
+- Test behavior as the user sees it: query by role, label or text, not class names or implementation details
+- Use `userEvent` for interactions; `await` async UI with `findBy*` / `waitFor`
+- Render with `renderWithProviders` (fresh `QueryClient`, `retry: false`, `MemoryRouter`)
+- Never hit the real network: mock Open-Meteo with MSW handlers in `src/test/handlers.ts` (unhandled requests fail the test)
+- Mock browser APIs (`navigator.geolocation`, `matchMedia`, `localStorage`) per test
+- Always cover loading, error and success for data-driven components
+- Unit-test pure utilities (unit conversion, weather-code mapping, outfit rules) with table-driven cases
+- Cover the happy path and error cases; don't write tests just to write them
+
+## Error Handling
+
+- Surface errors through query state (`isError`, `error`) and show a user-friendly message with Retry
+- Never show raw error objects or stack traces to users
+- Handle geolocation denial, unsupported browsers and empty search results explicitly
 
 ## Code Quality
 
 - No commented-out code unless specified
 - No unused imports or variables
 - Keep functions under 50 lines when possible
+- `npm run lint`, `npm test` and `npm run build` must pass before a feature is complete

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router'
+import { useTheme } from '../hooks/useTheme'
 import styles from './Layout.module.css'
 import { Logo } from './Logo'
 import { SearchBox } from './SearchBox'
@@ -7,6 +8,7 @@ import { SettingsModal } from './SettingsModal'
 import { UnitToggle } from './UnitToggle'
 
 export function Layout() {
+  useTheme()
   const isHome = useLocation().pathname === '/'
   const [settingsOpen, setSettingsOpen] = useState(false)
 

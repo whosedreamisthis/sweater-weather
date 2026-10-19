@@ -2,6 +2,8 @@ import { useEffect, useId, useRef } from 'react'
 import type { KeyboardEvent } from 'react'
 import type { Units } from '../api/types'
 import { useAppStore } from '../store/useAppStore'
+import { THEMES } from '../utils/theme'
+import type { Theme } from '../utils/theme'
 import styles from './SettingsModal.module.css'
 
 type Option<K extends keyof Units> = { value: Units[K]; label: string }
@@ -53,6 +55,34 @@ function UnitGroup<K extends keyof Units>({
   )
 }
 
+const THEME_LABELS: Record<Theme, string> = { light: 'Light', dark: 'Dark', system: 'System' }
+
+function ThemeGroup() {
+  const theme = useAppStore((s) => s.theme)
+  const setTheme = useAppStore((s) => s.setTheme)
+
+  return (
+    <fieldset className={styles.group}>
+      <legend className={styles.legend}>Theme</legend>
+      <div className={styles.segments}>
+        {THEMES.map((value) => (
+          <label key={value} className={styles.segment}>
+            <input
+              type="radio"
+              className={styles.input}
+              name="theme"
+              value={value}
+              checked={theme === value}
+              onChange={() => setTheme(value)}
+            />
+            {THEME_LABELS[value]}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  )
+}
+
 type Props = { onClose: () => void }
 
 const FOCUSABLE = [
@@ -67,6 +97,8 @@ const FOCUSABLE = [
 export function SettingsModal({ onClose }: Props) {
   const dialogRef = useRef<HTMLDivElement>(null)
   const titleId = useId()
+  const unitsId = useId()
+  const appearanceId = useId()
 
   useEffect(() => {
     const previouslyFocused = document.activeElement as HTMLElement | null
@@ -115,9 +147,20 @@ export function SettingsModal({ onClose }: Props) {
             ×
           </button>
         </div>
-        <UnitGroup legend="Temperature" name="temperature" options={TEMPERATURE} />
-        <UnitGroup legend="Wind speed" name="wind" options={WIND} />
-        <UnitGroup legend="Precipitation" name="precipitation" options={PRECIPITATION} />
+        <section className={styles.section} aria-labelledby={unitsId}>
+          <h3 id={unitsId} className={styles.sectionTitle}>
+            Units
+          </h3>
+          <UnitGroup legend="Temperature" name="temperature" options={TEMPERATURE} />
+          <UnitGroup legend="Wind speed" name="wind" options={WIND} />
+          <UnitGroup legend="Precipitation" name="precipitation" options={PRECIPITATION} />
+        </section>
+        <section className={styles.section} aria-labelledby={appearanceId}>
+          <h3 id={appearanceId} className={styles.sectionTitle}>
+            Appearance
+          </h3>
+          <ThemeGroup />
+        </section>
       </div>
     </div>
   )

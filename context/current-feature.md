@@ -1,4 +1,4 @@
-# Current Feature
+# Current Feature: Light / Dark Theme
 
 <!-- Feature name and short description -->
 
@@ -6,15 +6,26 @@
 
 <!-- Not Started | In Progress | Complete -->
 
-Completed
+In Progress
 
 ## Goals
 
 <!-- Goals and requirements -->
 
+- Store: `theme: 'light' | 'dark' | 'system'`, `setTheme`; persisted.
+- Apply via `data-theme` on `<html>`; `system` follows `prefers-color-scheme` and reacts to changes.
+- Define light and dark values for every global CSS custom property.
+- Toggle control in the header or settings.
+- Avoid a flash of the wrong theme: small inline script in `index.html` sets `data-theme` before React loads.
+- Ensure contrast meets WCAG AA in both themes.
+- Acceptance: theme persists, follows the system preference by default, and no flash on load.
+
 ## Notes
 
 <!-- Any extra notes -->
+
+- Spec: `context/features/theme-spec.md`. Depends on project-setup and units-toggle (persist setup).
+- Tests: store behavior; `data-theme` updates; system preference change handling (mock `matchMedia`).
 
 ## Completed Features
 

@@ -51,7 +51,11 @@ describe('setUnits', () => {
   it('persists units and favorites to localStorage under the sweater-weather key', () => {
     useAppStore.getState().setUnits({ wind: 'mph' })
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}')
-    expect(saved.state).toEqual({ units: { ...DEFAULT_UNITS, wind: 'mph' }, favorites: [] })
+    expect(saved.state).toEqual({
+      units: { ...DEFAULT_UNITS, wind: 'mph' },
+      theme: 'system',
+      favorites: [],
+    })
   })
 
   it('restores saved units on rehydrate', async () => {

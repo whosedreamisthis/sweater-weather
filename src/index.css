@@ -59,6 +59,31 @@
   --touch-target: 2.75rem;
 }
 
+/* Dark theme: every themeable token above is overridden here. Text/surface pairs are >= 4.5:1. */
+:root[data-theme='dark'] {
+  --color-bg: #0f0b26;
+  --color-bg-gradient: linear-gradient(160deg, #2a0f2e 0%, #121437 45%, #0c2a2a 100%);
+  --color-surface: #1b1640;
+  --color-text: #f0edff;
+  --color-text-muted: #b9b2e6;
+  --color-border: #3b3470;
+  --color-border-strong: #8e86d1;
+  --color-primary: #a68aff;
+  --color-primary-contrast: #130d33;
+  --color-danger: #ff6b8e;
+  --gradient-brand: linear-gradient(90deg, #ff3d81 0%, #ff8a1f 50%, #ffc53d 100%);
+
+  --gradient-outfit: linear-gradient(135deg, #3a1840 0%, #2a2260 100%);
+
+  --shadow-header: 0 4px 18px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-popover: 0 8px 24px rgb(0 0 0 / 55%);
+  --shadow-modal: 0 12px 40px rgb(0 0 0 / 0.7);
+  --color-overlay: rgb(0 0 0 / 0.65);
+
+  --accent-night: #8b73ff;
+}
+
 /* Reset */
 *,
 *::before,

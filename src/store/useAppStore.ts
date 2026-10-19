@@ -2,6 +2,8 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import type { StateStorage } from 'zustand/middleware'
 import type { Coordinates, Location, Units } from '../api/types'
+import { isTheme } from '../utils/theme'
+import type { Theme } from '../utils/theme'
 
 export type FavoriteResult = 'added' | 'duplicate' | 'full'
 
@@ -10,6 +12,8 @@ export const MAX_FAVORITES = 10
 type AppState = {
   units: Units
   setUnits: (units: Partial<Units>) => void
+  theme: Theme
+  setTheme: (theme: Theme) => void
   favorites: Location[]
   addFavorite: (location: Location) => FavoriteResult
   removeFavorite: (latitude: number, longitude: number) => void
@@ -107,6 +111,8 @@ export const useAppStore = create<AppState>()(
     (set, get) => ({
       units: defaultUnitsFor(language),
       setUnits: (units) => set((state) => ({ units: { ...state.units, ...units } })),
+      theme: 'system',
+      setTheme: (theme) => set({ theme }),
       favorites: [],
       addFavorite: (location) => {
         const { favorites } = get()
@@ -123,15 +129,21 @@ export const useAppStore = create<AppState>()(
     {
       name: STORAGE_KEY,
       storage: createJSONStorage(() => safeStorage),
-      partialize: (state) => ({ units: state.units, favorites: state.favorites }),
+      partialize: (state) => ({
+        units: state.units,
+        theme: state.theme,
+        favorites: state.favorites,
+      }),
       // Never trust stored JSON: it may be hand-edited or from an older schema.
       merge: (persisted, current) => {
         const p = (typeof persisted === 'object' && persisted !== null ? persisted : {}) as {
           units?: unknown
+          theme?: unknown
           favorites?: unknown
         }
         return {
           ...current,
+          theme: isTheme(p.theme) ? p.theme : current.theme,
           units: sanitizeUnits(p.units, current.units),
           favorites: Array.isArray(p.favorites)
             ? p.favorites.filter(isLocation).slice(0, MAX_FAVORITES)

@@ -18,6 +18,25 @@
       content="Current conditions, hourly and daily forecasts for any city, plus a simple answer to what to wear today."
     />
     <meta name="twitter:card" content="summary" />
+    <script>
+      // Set the theme before first paint to avoid a flash. Keep in sync with src/utils/theme.ts.
+      (function () {
+        var theme = 'system';
+        try {
+          var saved = JSON.parse(localStorage.getItem('sweater-weather') || '{}');
+          var value = saved && saved.state && saved.state.theme;
+          if (value === 'light' || value === 'dark' || value === 'system') theme = value;
+        } catch (e) {}
+        var dark =
+          theme === 'dark' ||
+          (theme === 'system' &&
+            typeof matchMedia === 'function' &&
+            matchMedia('(prefers-color-scheme: dark)').matches);
+        var resolved = dark ? 'dark' : 'light';
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.style.colorScheme = resolved;
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

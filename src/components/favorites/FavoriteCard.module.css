@@ -1,0 +1,85 @@
+.card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.link {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Stretch the link over the whole card; remove/retry sit above it. */
+.link::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+}
+
+.card:hover {
+  border-color: var(--color-primary);
+}
+
+.link:hover .name {
+  text-decoration: underline;
+}
+
+.link:focus-visible::after {
+  border-radius: var(--radius-md);
+  outline: 3px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.remove:focus-visible,
+.retry:focus-visible {
+  outline: 3px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.name {
+  font-weight: 600;
+}
+
+.country,
+.status {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.weather {
+  font-size: 1.25rem;
+  white-space: nowrap;
+}
+
+.retry,
+.remove {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.retry,
+.remove {
+  position: relative;
+  z-index: 1;
+}
+
+.retry {
+  text-decoration: underline;
+}
+
+.remove {
+  padding: var(--space-2);
+  color: var(--color-text-muted);
+}

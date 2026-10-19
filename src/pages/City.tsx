@@ -4,6 +4,7 @@ import { ApiError } from '../api/http'
 import { CurrentWeather } from '../components/current/CurrentWeather'
 import { CurrentWeatherSkeleton } from '../components/current/CurrentWeatherSkeleton'
 import { ErrorState } from '../components/current/ErrorState'
+import { FavoriteButton } from '../components/favorites/FavoriteButton'
 import { DailyList } from '../components/daily/DailyList'
 import { DailyListSkeleton } from '../components/daily/DailyListSkeleton'
 import { HourlyList } from '../components/hourly/HourlyList'
@@ -61,6 +62,16 @@ export function City() {
   const { current, hourly, daily } = forecast.data
   return (
     <>
+      <FavoriteButton
+        location={{
+          id: 0,
+          name,
+          country: '',
+          latitude: lat,
+          longitude: lon,
+          timezone: forecast.data.location.timezone,
+        }}
+      />
       <CurrentWeather
         name={name}
         current={current}

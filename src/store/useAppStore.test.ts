@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   DEFAULT_UNITS,
   IMPERIAL_UNITS,
+  MAX_FAVORITES,
   STORAGE_KEY,
   defaultUnitsFor,
   safeStorage,
@@ -47,10 +48,10 @@ describe('setUnits', () => {
     expect(useAppStore.getState().units).toEqual(IMPERIAL_UNITS)
   })
 
-  it('persists only units to localStorage under the sweater-weather key', () => {
+  it('persists units and favorites to localStorage under the sweater-weather key', () => {
     useAppStore.getState().setUnits({ wind: 'mph' })
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}')
-    expect(saved.state).toEqual({ units: { ...DEFAULT_UNITS, wind: 'mph' } })
+    expect(saved.state).toEqual({ units: { ...DEFAULT_UNITS, wind: 'mph' }, favorites: [] })
   })
 
   it('restores saved units on rehydrate', async () => {
@@ -86,5 +87,44 @@ describe('safeStorage', () => {
     })
     useAppStore.getState().setUnits({ temperature: 'fahrenheit' })
     expect(useAppStore.getState().units.temperature).toBe('fahrenheit')
+  })
+})
+
+describe('favorites', () => {
+  const place = (latitude: number, longitude: number) => ({
+    id: 0,
+    name: 'Somewhere',
+    country: '',
+    latitude,
+    longitude,
+    timezone: 'UTC',
+  })
+
+  beforeEach(() => useAppStore.setState({ favorites: [] }))
+
+  it('adds and removes by coordinates', () => {
+    expect(useAppStore.getState().addFavorite(place(51.5, -0.12))).toBe('added')
+    expect(useAppStore.getState().favorites).toHaveLength(1)
+    useAppStore.getState().removeFavorite(51.5, -0.12)
+    expect(useAppStore.getState().favorites).toEqual([])
+  })
+
+  it('dedupes by coordinates', () => {
+    useAppStore.getState().addFavorite(place(51.5, -0.12))
+    expect(useAppStore.getState().addFavorite(place(51.50001, -0.12))).toBe('duplicate')
+    expect(useAppStore.getState().favorites).toHaveLength(1)
+  })
+
+  it('caps at MAX_FAVORITES', () => {
+    for (let i = 0; i < MAX_FAVORITES; i++) useAppStore.getState().addFavorite(place(i, i))
+    expect(useAppStore.getState().addFavorite(place(50, 50))).toBe('full')
+    expect(useAppStore.getState().favorites).toHaveLength(MAX_FAVORITES)
+  })
+
+  it('persists favorites', () => {
+    useAppStore.getState().addFavorite(place(51.5, -0.12))
+    expect(storage.setItem).toHaveBeenCalled()
+    const saved = JSON.parse(storage.setItem.mock.calls.at(-1)![1] as string)
+    expect(saved.state.favorites).toHaveLength(1)
   })
 })

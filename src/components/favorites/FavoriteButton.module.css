@@ -1,0 +1,38 @@
+.wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  max-width: 640px;
+  margin-inline: auto;
+  margin-bottom: var(--space-3);
+}
+
+.button {
+  padding: var(--space-2) var(--space-4);
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.button[aria-pressed='true'] {
+  border-color: var(--color-primary);
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.message {
+  margin: 0;
+  color: var(--color-danger);
+}
+
+.message:empty {
+  display: none;
+}

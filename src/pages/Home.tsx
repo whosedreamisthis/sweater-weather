@@ -1,3 +1,4 @@
+import { FavoritesList } from '../components/favorites/FavoritesList'
 import { SearchBox } from '../components/SearchBox'
 import styles from './Home.module.css'
 
@@ -9,6 +10,7 @@ export function Home() {
       <div className={styles.search}>
         <SearchBox />
       </div>
+      <FavoritesList />
     </>
   )
 }

@@ -22,5 +22,16 @@ export function useForecast(lat: number, lon: number) {
     setSettledUnits(units)
   }
 
-  return { ...query, units: query.isPlaceholderData ? settledUnits : units }
+  // Pick fields explicitly: spreading `query` reads every getter and subscribes
+  // consumers to all state changes, defeating TanStack's tracked-props optimization.
+  return {
+    data: query.data,
+    error: query.error,
+    isError: query.isError,
+    isSuccess: query.isSuccess,
+    isFetching: query.isFetching,
+    dataUpdatedAt: query.dataUpdatedAt,
+    refetch: query.refetch,
+    units: query.isPlaceholderData ? settledUnits : units,
+  }
 }

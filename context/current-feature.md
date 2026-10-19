@@ -1,4 +1,4 @@
-# Current Feature: Light / Dark Theme
+# Current Feature
 
 <!-- Feature name and short description -->
 
@@ -6,26 +6,15 @@
 
 <!-- Not Started | In Progress | Complete -->
 
-In Progress
+Completed
 
 ## Goals
 
 <!-- Goals and requirements -->
 
-- Store: `theme: 'light' | 'dark' | 'system'`, `setTheme`; persisted.
-- Apply via `data-theme` on `<html>`; `system` follows `prefers-color-scheme` and reacts to changes.
-- Define light and dark values for every global CSS custom property.
-- Toggle control in the header or settings.
-- Avoid a flash of the wrong theme: small inline script in `index.html` sets `data-theme` before React loads.
-- Ensure contrast meets WCAG AA in both themes.
-- Acceptance: theme persists, follows the system preference by default, and no flash on load.
-
 ## Notes
 
 <!-- Any extra notes -->
-
-- Spec: `context/features/theme-spec.md`. Depends on project-setup and units-toggle (persist setup).
-- Tests: store behavior; `data-theme` updates; system preference change handling (mock `matchMedia`).
 
 ## Completed Features
 
@@ -42,3 +31,4 @@ In Progress
 - **What to Wear:** Rule-based outfit card on the City page from feels-like, worst 6-hour rain chance, wind and UV; see `src/utils/outfit.ts`, `src/components/outfit/`.
 - **Air Quality:** City page card with US AQI, category, health note and PM2.5/PM10, with its own loading/error/unavailable states; see `src/api/airQuality.ts`, `src/components/airquality/`.
 - **Home Page Content:** Hero heading, popular cities grid with live weather and how-it-works strip below saved locations; city skeleton reserves save button space; see `src/components/home/`, `src/components/favorites/LocationWeather.tsx`.
+- **Light / Dark Theme:** Persisted light/dark/system theme applied via data-theme with a no-flash inline script and Settings Appearance section; see `src/utils/theme.ts`, `src/index.css`.

@@ -73,6 +73,35 @@ export const safeStorage: StateStorage = {
   },
 }
 
+function isLocation(value: unknown): value is Location {
+  if (typeof value !== 'object' || value === null) return false
+  const v = value as Record<string, unknown>
+  return (
+    typeof v.id === 'number' &&
+    typeof v.name === 'string' &&
+    typeof v.country === 'string' &&
+    (v.admin1 === undefined || typeof v.admin1 === 'string') &&
+    typeof v.timezone === 'string' &&
+    typeof v.latitude === 'number' &&
+    Number.isFinite(v.latitude) &&
+    typeof v.longitude === 'number' &&
+    Number.isFinite(v.longitude)
+  )
+}
+
+function sanitizeUnits(value: unknown, fallback: Units): Units {
+  const v = (typeof value === 'object' && value !== null ? value : {}) as Record<string, unknown>
+  return {
+    temperature:
+      v.temperature === 'celsius' || v.temperature === 'fahrenheit'
+        ? v.temperature
+        : fallback.temperature,
+    wind: v.wind === 'kmh' || v.wind === 'mph' ? v.wind : fallback.wind,
+    precipitation:
+      v.precipitation === 'mm' || v.precipitation === 'inch' ? v.precipitation : fallback.precipitation,
+  }
+}
+
 const language = typeof navigator === 'undefined' ? undefined : navigator.language
 
 export const useAppStore = create<AppState>()(
@@ -97,6 +126,20 @@ export const useAppStore = create<AppState>()(
       name: STORAGE_KEY,
       storage: createJSONStorage(() => safeStorage),
       partialize: (state) => ({ units: state.units, favorites: state.favorites }),
+      // Never trust stored JSON: it may be hand-edited or from an older schema.
+      merge: (persisted, current) => {
+        const p = (typeof persisted === 'object' && persisted !== null ? persisted : {}) as {
+          units?: unknown
+          favorites?: unknown
+        }
+        return {
+          ...current,
+          units: sanitizeUnits(p.units, current.units),
+          favorites: Array.isArray(p.favorites)
+            ? p.favorites.filter(isLocation).slice(0, MAX_FAVORITES)
+            : [],
+        }
+      },
     },
   ),
 )

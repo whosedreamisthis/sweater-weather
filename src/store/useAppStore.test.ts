@@ -64,6 +64,38 @@ describe('setUnits', () => {
   })
 })
 
+describe('rehydrate validation', () => {
+  const rehydrateWith = async (state: unknown) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ state, version: 0 }))
+    await useAppStore.persist.rehydrate()
+  }
+
+  it('drops malformed favorites and keeps valid ones', async () => {
+    const good = {
+      id: 1,
+      name: 'London',
+      country: 'UK',
+      latitude: 51.5,
+      longitude: -0.12,
+      timezone: 'Europe/London',
+    }
+    await rehydrateWith({
+      favorites: [good, { name: 'Bad', latitude: '1', longitude: null }, 'junk', null],
+    })
+    expect(useAppStore.getState().favorites).toEqual([good])
+  })
+
+  it('falls back to defaults when favorites is not an array', async () => {
+    await rehydrateWith({ favorites: { not: 'an array' } })
+    expect(useAppStore.getState().favorites).toEqual([])
+  })
+
+  it('replaces invalid unit values individually', async () => {
+    await rehydrateWith({ units: { temperature: 'kelvin', wind: 'mph', precipitation: 5 } })
+    expect(useAppStore.getState().units).toEqual({ ...DEFAULT_UNITS, wind: 'mph' })
+  })
+})
+
 describe('safeStorage', () => {
   it('swallows errors when localStorage is unavailable', () => {
     storage.getItem.mockImplementation(() => {

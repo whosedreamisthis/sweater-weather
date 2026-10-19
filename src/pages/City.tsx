@@ -4,6 +4,8 @@ import { ApiError } from '../api/http'
 import { CurrentWeather } from '../components/current/CurrentWeather'
 import { CurrentWeatherSkeleton } from '../components/current/CurrentWeatherSkeleton'
 import { ErrorState } from '../components/current/ErrorState'
+import { DailyList } from '../components/daily/DailyList'
+import { DailyListSkeleton } from '../components/daily/DailyListSkeleton'
 import { HourlyList } from '../components/hourly/HourlyList'
 import { HourlyListSkeleton } from '../components/hourly/HourlyListSkeleton'
 import { useForecast } from '../hooks/useForecast'
@@ -51,6 +53,7 @@ export function City() {
       <div aria-live="polite">
         <CurrentWeatherSkeleton />
         <HourlyListSkeleton />
+        <DailyListSkeleton />
       </div>
     )
   }
@@ -66,6 +69,7 @@ export function City() {
         isRefetching={forecast.isFetching}
       />
       <HourlyList hours={sliceHourly(hourly, current.time)} daily={daily} units={forecast.units} />
+      <DailyList days={daily} units={forecast.units} />
     </>
   )
 }

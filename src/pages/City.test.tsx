@@ -27,7 +27,7 @@ describe('City page', () => {
     const card = within(screen.getByRole('region', { name: 'London' }))
     expect(card.getByText('14°C')).toBeInTheDocument()
     expect(screen.getByText('Feels like 13°C')).toBeInTheDocument()
-    expect(screen.getByText('Overcast')).toBeInTheDocument()
+    expect(card.getByText('Overcast')).toBeInTheDocument()
     expect(screen.getByText('71%')).toBeInTheDocument()
     expect(screen.getByText('12 km/h SW')).toBeInTheDocument()
     expect(screen.getByText('1008 hPa')).toBeInTheDocument()

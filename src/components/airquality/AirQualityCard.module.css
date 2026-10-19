@@ -1,6 +1,6 @@
 .card {
   --aqi-color: var(--aqi-0);
-  max-width: 640px;
+  max-width: var(--reading-width);
   margin: var(--space-4) auto 0;
   padding: var(--space-4) var(--space-6);
   background: var(--color-surface);
@@ -49,7 +49,7 @@
   font-size: 1rem;
   color: var(--color-on-aqi);
   background: var(--aqi-color);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 
 .value {

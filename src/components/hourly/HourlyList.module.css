@@ -1,5 +1,5 @@
 .section {
-  max-width: 640px;
+  max-width: var(--reading-width);
   margin: var(--space-4) auto 0;
 }
 

@@ -24,3 +24,5 @@ Completed
 - **Current Conditions:** City page hero card with skeleton, error/Retry, invalid-coordinate state and day/night accents; see `src/pages/City.tsx`, `src/components/current/`, `src/utils/format.ts`.
 - **Units Toggle:** Persisted units store with `en-US` defaults, header °C/°F toggle, segmented Settings controls and a cloud logo/favicon; see `src/store/useAppStore.ts`, `src/components/UnitToggle.tsx`, `src/pages/Settings.tsx`.
 - **Hourly Forecast:** City page strip of the next 24 hours from the current hour, with Now label, units-aware temps and snap scrolling; see `src/components/hourly/`, `src/utils/hourly.ts`.
+- **Daily Forecast:** City page 7-day list with weekday, icon, condition, rain chance and low–high, expandable sunrise/sunset/UV; see `src/components/daily/`, `src/utils/daily.ts`.
+- **Hourly Forecast:** City page strip of the next 24 hours from the current hour, with Now label, units-aware temps and snap scrolling; see `src/components/hourly/`, `src/utils/hourly.ts`.

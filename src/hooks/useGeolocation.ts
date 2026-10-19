@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import type { Coordinates } from '../api/types'
 
 export type GeolocationStatus =
   | 'idle'
@@ -7,8 +8,6 @@ export type GeolocationStatus =
   | 'denied'
   | 'unavailable'
   | 'timeout'
-
-export type Coordinates = { latitude: number; longitude: number }
 
 const TIMEOUT_MS = 10_000
 const DECIMALS = 2

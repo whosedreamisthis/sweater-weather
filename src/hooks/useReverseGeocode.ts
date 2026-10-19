@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { reverseGeocode } from '../api/reverseGeocoding'
-import type { Coordinates } from './useGeolocation'
+import type { Coordinates } from '../api/types'
 
 /** City name for coordinates; a place's name doesn't change, so it never goes stale. */
 export function useReverseGeocode(lat: number, lon: number, enabled: boolean) {

@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
 import { useNavigate } from 'react-router'
+import { MIN_QUERY_LENGTH, RESULT_COUNT } from '../api/geocoding'
 import type { Location } from '../api/types'
 import { useCitySearch } from '../hooks/useCitySearch'
 import { useDebouncedValue } from '../hooks/useDebouncedValue'
@@ -8,8 +9,6 @@ import { cityPath } from '../utils/routes'
 import styles from './SearchBox.module.css'
 import { UseMyLocationButton } from './UseMyLocationButton'
 
-const MAX_RESULTS = 5
-const MIN_QUERY_LENGTH = 2
 const DEBOUNCE_MS = 300
 
 export function SearchBox() {
@@ -37,7 +36,7 @@ export function SearchBox() {
   const { data, isFetching, isError, refetch } = useCitySearch(debouncedQuery)
 
   const showPanel = open && query.trim().length >= MIN_QUERY_LENGTH
-  const results = data?.slice(0, MAX_RESULTS) ?? []
+  const results = data?.slice(0, RESULT_COUNT) ?? []
   // Typing ahead of the debounce also counts as loading.
   const isLoading = showPanel && (query !== debouncedQuery || isFetching)
 

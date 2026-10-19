@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import type { StateStorage } from 'zustand/middleware'
-import type { Location, Units } from '../api/types'
+import type { Coordinates, Location, Units } from '../api/types'
 
 export type FavoriteResult = 'added' | 'duplicate' | 'full'
 
@@ -14,8 +14,6 @@ type AppState = {
   addFavorite: (location: Location) => FavoriteResult
   removeFavorite: (latitude: number, longitude: number) => void
 }
-
-type Coordinates = Pick<Location, 'latitude' | 'longitude'>
 
 /** Same place if the coordinates match to ~1 km; guards against float noise and URL rounding. */
 export function sameCoordinates(a: Coordinates, b: Coordinates): boolean {

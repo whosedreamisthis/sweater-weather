@@ -14,6 +14,8 @@ export type Location = {
   timezone: string
 }
 
+export type Coordinates = Pick<Location, 'latitude' | 'longitude'>
+
 export type CurrentWeather = {
   time: string
   temperature: number

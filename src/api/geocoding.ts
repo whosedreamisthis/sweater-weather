@@ -2,8 +2,8 @@ import { ApiError, fetchJson, isRecord } from './http'
 import type { Location } from './types'
 
 const GEOCODING_URL = 'https://geocoding-api.open-meteo.com/v1/search'
-const RESULT_COUNT = 5
-const MIN_QUERY_LENGTH = 2
+export const RESULT_COUNT = 5
+export const MIN_QUERY_LENGTH = 2
 
 type RawLocation = {
   id: number

@@ -27,3 +27,4 @@ Completed
 - **Daily Forecast:** City page 7-day list with weekday, icon, condition, rain chance and low–high, expandable sunrise/sunset/UV; see `src/components/daily/`, `src/utils/daily.ts`.
 - **Saved Locations:** Persisted favorites (deduped by coordinates, capped at 10) with a City page save button and Home cards with per-card weather; see `src/store/useAppStore.ts`, `src/components/favorites/`.
 - **Geolocation:** Click-only "Use my location" button beside search, rounded coordinates, reverse-geocoded city name and friendly error messages; see `src/hooks/useGeolocation.ts`, `src/components/UseMyLocationButton.tsx`.
+- **Vibrant Colors:** Saturated palette tokens, gradient page background and header underline, weather-tinted current-conditions card; see `src/index.css`, `src/components/current/CurrentWeather.module.css`.

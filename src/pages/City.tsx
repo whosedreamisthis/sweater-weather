@@ -7,6 +7,7 @@ import { ErrorState } from '../components/current/ErrorState'
 import { FavoriteButton } from '../components/favorites/FavoriteButton'
 import { DailyList } from '../components/daily/DailyList'
 import { DailyListSkeleton } from '../components/daily/DailyListSkeleton'
+import { OutfitCard } from '../components/outfit/OutfitCard'
 import { HourlyList } from '../components/hourly/HourlyList'
 import { HourlyListSkeleton } from '../components/hourly/HourlyListSkeleton'
 import { useForecast } from '../hooks/useForecast'
@@ -60,6 +61,7 @@ export function City() {
   }
 
   const { current, hourly, daily } = forecast.data
+  const upcoming = sliceHourly(hourly, current.time)
   return (
     <>
       <FavoriteButton
@@ -79,7 +81,8 @@ export function City() {
         updatedMinutes={minutesAgo(forecast.dataUpdatedAt, now)}
         isRefetching={forecast.isFetching}
       />
-      <HourlyList hours={sliceHourly(hourly, current.time)} daily={daily} units={forecast.units} />
+      <OutfitCard current={current} hours={upcoming} units={forecast.units} />
+      <HourlyList hours={upcoming} daily={daily} units={forecast.units} />
       <DailyList days={daily} units={forecast.units} />
     </>
   )

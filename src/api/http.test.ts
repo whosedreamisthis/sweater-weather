@@ -20,6 +20,37 @@ describe('fetchJson', () => {
     expect(error).toMatchObject({ status: 200, message: expect.stringContaining('unreadable') })
   })
 
+  it('rethrows the abort error when the caller cancels', async () => {
+    server.use(
+      http.get(URL, async () => {
+        await new Promise((resolve) => setTimeout(resolve, 200))
+        return HttpResponse.json({ ok: true })
+      }),
+    )
+    const controller = new AbortController()
+
+    const pending = fetchJson(URL, { signal: controller.signal }).catch((e: unknown) => e)
+    controller.abort()
+
+    const error = await pending
+    expect(error).not.toBeInstanceOf(ApiError)
+    expect(error).toMatchObject({ name: 'AbortError' })
+  })
+
+  it('fails as a network error when the timeout elapses', async () => {
+    server.use(
+      http.get(URL, async () => {
+        await new Promise((resolve) => setTimeout(resolve, 200))
+        return HttpResponse.json({ ok: true })
+      }),
+    )
+
+    await expect(fetchJson(URL, { timeoutMs: 20 })).rejects.toMatchObject({
+      name: 'ApiError',
+      status: 0,
+    })
+  })
+
   it('ignores a non-string reason and uses the generic message', async () => {
     server.use(http.get(URL, () => HttpResponse.json({ reason: 42 }, { status: 429 })))
 

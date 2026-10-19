@@ -8,7 +8,7 @@ export function useCitySearch(query: string) {
   const term = query.trim()
   return useQuery({
     queryKey: ['geocoding', term.toLowerCase()],
-    queryFn: () => searchCities(term),
+    queryFn: ({ signal }) => searchCities(term, signal),
     enabled: term.length >= MIN_QUERY_LENGTH,
     staleTime: ONE_HOUR_MS,
   })

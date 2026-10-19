@@ -43,7 +43,7 @@ export function transformLocations(raw: unknown): Location[] {
   }))
 }
 
-export async function searchCities(query: string): Promise<Location[]> {
+export async function searchCities(query: string, signal?: AbortSignal): Promise<Location[]> {
   const name = query.trim()
   if (name.length < MIN_QUERY_LENGTH) {
     throw new ApiError('Enter at least 2 characters to search.', 400)
@@ -54,5 +54,5 @@ export async function searchCities(query: string): Promise<Location[]> {
     language: 'en',
     format: 'json',
   })
-  return transformLocations(await fetchJson(`${GEOCODING_URL}?${params}`))
+  return transformLocations(await fetchJson(`${GEOCODING_URL}?${params}`, { signal }))
 }

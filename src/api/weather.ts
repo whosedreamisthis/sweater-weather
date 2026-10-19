@@ -171,6 +171,7 @@ export async function fetchCompactWeather(
   lat: number,
   lon: number,
   temperatureUnit: Units['temperature'],
+  signal?: AbortSignal,
 ): Promise<CompactWeather> {
   validateCoordinates(lat, lon)
   const params = new URLSearchParams({
@@ -180,7 +181,7 @@ export async function fetchCompactWeather(
     temperature_unit: temperatureUnit,
     timezone: 'auto',
   })
-  const raw = await fetchJson(`${FORECAST_URL}?${params}`)
+  const raw = await fetchJson(`${FORECAST_URL}?${params}`, { signal })
   if (!isRawCompactWeather(raw)) throw unexpectedResponse()
   const { current } = raw
   return {
@@ -191,7 +192,12 @@ export async function fetchCompactWeather(
   }
 }
 
-export async function fetchForecast(lat: number, lon: number, units: Units): Promise<Forecast> {
+export async function fetchForecast(
+  lat: number,
+  lon: number,
+  units: Units,
+  signal?: AbortSignal,
+): Promise<Forecast> {
   validateCoordinates(lat, lon)
   const params = new URLSearchParams({
     latitude: String(lat),
@@ -204,7 +210,7 @@ export async function fetchForecast(lat: number, lon: number, units: Units): Pro
     precipitation_unit: units.precipitation,
     timezone: 'auto',
   })
-  const raw = await fetchJson(`${FORECAST_URL}?${params}`)
+  const raw = await fetchJson(`${FORECAST_URL}?${params}`, { signal })
   if (!isRawForecast(raw)) throw unexpectedResponse()
   return transformForecast(raw)
 }

@@ -33,24 +33,45 @@ async function readErrorReason(response: Response): Promise<string> {
   return `Weather service error (${response.status}).`
 }
 
-export async function fetchJson(url: string): Promise<unknown> {
-  let response: Response
-  try {
-    response = await fetch(url)
-  } catch {
-    throw new ApiError(
-      'Could not reach the weather service. Check your connection.',
-      NETWORK_ERROR_STATUS,
-    )
-  }
+export type FetchOptions = {
+  /** Caller cancellation (e.g. TanStack Query's signal); rethrown untouched so it isn't reported as an error. */
+  signal?: AbortSignal
+  /** Abort and fail as a network error if there's no response in time. */
+  timeoutMs?: number
+}
 
-  if (!response.ok) {
-    throw new ApiError(await readErrorReason(response), response.status)
-  }
+export async function fetchJson(url: string, options: FetchOptions = {}): Promise<unknown> {
+  const { signal, timeoutMs } = options
+  const controller = new AbortController()
+  const abort = () => controller.abort(signal?.reason)
+  if (signal?.aborted) abort()
+  else signal?.addEventListener('abort', abort, { once: true })
+  const timer = timeoutMs === undefined ? undefined : setTimeout(abort, timeoutMs)
 
   try {
-    return await response.json()
-  } catch {
-    throw new ApiError('The weather service returned an unreadable response.', response.status)
+    let response: Response
+    try {
+      response = await fetch(url, { signal: controller.signal })
+    } catch (error) {
+      if (signal?.aborted) throw error
+      throw new ApiError(
+        'Could not reach the weather service. Check your connection.',
+        NETWORK_ERROR_STATUS,
+      )
+    }
+
+    if (!response.ok) {
+      throw new ApiError(await readErrorReason(response), response.status)
+    }
+
+    try {
+      return await response.json()
+    } catch (error) {
+      if (signal?.aborted) throw error
+      throw new ApiError('The weather service returned an unreadable response.', response.status)
+    }
+  } finally {
+    clearTimeout(timer)
+    signal?.removeEventListener('abort', abort)
   }
 }

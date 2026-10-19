@@ -35,7 +35,11 @@ export function transformAirQuality(raw: RawAirQuality): AirQuality | null {
   }
 }
 
-export async function fetchAirQuality(lat: number, lon: number): Promise<AirQuality | null> {
+export async function fetchAirQuality(
+  lat: number,
+  lon: number,
+  signal?: AbortSignal,
+): Promise<AirQuality | null> {
   validateCoordinates(lat, lon)
   const params = new URLSearchParams({
     latitude: String(lat),
@@ -43,7 +47,7 @@ export async function fetchAirQuality(lat: number, lon: number): Promise<AirQual
     current: CURRENT_VARS,
     timezone: 'auto',
   })
-  const raw = await fetchJson(`${AIR_QUALITY_URL}?${params}`)
+  const raw = await fetchJson(`${AIR_QUALITY_URL}?${params}`, { signal })
   if (!isRawAirQuality(raw)) throw unexpectedResponse()
   return transformAirQuality(raw)
 }

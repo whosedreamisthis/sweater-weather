@@ -4,9 +4,12 @@ import { ApiError } from '../api/http'
 import { CurrentWeather } from '../components/current/CurrentWeather'
 import { CurrentWeatherSkeleton } from '../components/current/CurrentWeatherSkeleton'
 import { ErrorState } from '../components/current/ErrorState'
+import { HourlyList } from '../components/hourly/HourlyList'
+import { HourlyListSkeleton } from '../components/hourly/HourlyListSkeleton'
 import { useForecast } from '../hooks/useForecast'
 import { useNow } from '../hooks/useNow'
 import { minutesAgo } from '../utils/format'
+import { sliceHourly } from '../utils/hourly'
 
 const APP_NAME = 'SweaterWeather'
 
@@ -47,17 +50,22 @@ export function City() {
     return (
       <div aria-live="polite">
         <CurrentWeatherSkeleton />
+        <HourlyListSkeleton />
       </div>
     )
   }
 
+  const { current, hourly, daily } = forecast.data
   return (
-    <CurrentWeather
-      name={name}
-      current={forecast.data.current}
-      units={forecast.units}
-      updatedMinutes={minutesAgo(forecast.dataUpdatedAt, now)}
-      isRefetching={forecast.isFetching}
-    />
+    <>
+      <CurrentWeather
+        name={name}
+        current={current}
+        units={forecast.units}
+        updatedMinutes={minutesAgo(forecast.dataUpdatedAt, now)}
+        isRefetching={forecast.isFetching}
+      />
+      <HourlyList hours={sliceHourly(hourly, current.time)} daily={daily} units={forecast.units} />
+    </>
   )
 }

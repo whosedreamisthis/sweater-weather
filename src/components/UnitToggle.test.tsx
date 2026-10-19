@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { delay, http, HttpResponse } from 'msw'
 import { createMemoryRouter } from 'react-router'
@@ -37,6 +37,9 @@ function unitAwareForecast() {
   return requests
 }
 
+/** The hourly strip repeats temperatures, so scope hero assertions to the current card. */
+const currentCard = () => within(screen.getByRole('region', { name: 'London' }))
+
 beforeEach(() => useAppStore.setState({ units: DEFAULT_UNITS }))
 
 describe('unit controls', () => {
@@ -44,10 +47,11 @@ describe('unit controls', () => {
     const requests = unitAwareForecast()
     renderApp('/city/51.5/-0.12?name=London')
 
-    expect(await screen.findByText('14°C')).toBeInTheDocument()
+    expect(await screen.findByRole('region', { name: 'London' })).toBeInTheDocument()
+    expect(currentCard().getByText('14°C')).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'Switch to Fahrenheit' }))
 
-    expect(await screen.findByText('58°F')).toBeInTheDocument()
+    await waitFor(() => expect(currentCard().getByText('58°F')).toBeInTheDocument())
     expect(screen.getByRole('button', { name: 'Switch to Celsius' })).toBeInTheDocument()
     expect(requests.map((u) => u.searchParams.get('temperature_unit'))).toEqual([
       'celsius',
@@ -58,7 +62,7 @@ describe('unit controls', () => {
   it('keeps the card on screen, in its old units, while the new units load', async () => {
     unitAwareForecast()
     renderApp('/city/51.5/-0.12?name=London')
-    expect(await screen.findByText('14°C')).toBeInTheDocument()
+    expect(await screen.findByRole('region', { name: 'London' })).toBeInTheDocument()
 
     server.use(
       http.get(FORECAST_URL, async () => {
@@ -70,8 +74,8 @@ describe('unit controls', () => {
 
     expect(screen.queryByLabelText('Loading current weather')).not.toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'London' })).toBeInTheDocument()
-    expect(screen.getByText('14°C')).toBeInTheDocument()
-    expect(await screen.findByText('14°F')).toBeInTheDocument()
+    expect(currentCard().getByText('14°C')).toBeInTheDocument()
+    await waitFor(() => expect(currentCard().getByText('14°F')).toBeInTheDocument())
   })
 
   it('settings modal radios change wind units on the city page', async () => {

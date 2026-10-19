@@ -1,24 +1,20 @@
-# Current Feature: Geolocation
+# Current Feature
 
-"Use my location" button.
+<!-- Feature name and short description -->
 
 ## Status
 
-In Progress
+<!-- Not Started | In Progress | Complete -->
+
+Completed
 
 ## Goals
 
-- `useGeolocation` hook wrapping `navigator.geolocation.getCurrentPosition` with states: idle, loading, success, denied, unavailable, timeout.
-- "Use my location" button on Home and in the search box; on success navigate to `/city/:lat/:lon` (name resolved via reverse geocoding if available, else "Current location").
-- Distinct, friendly messages for permission denied, unsupported browsers and timeouts, with a prompt to search manually.
-- Never request permission on page load, only on click.
-- Round coordinates (e.g. 2 decimals) for better query cache hits and privacy.
+<!-- Goals and requirements -->
 
 ## Notes
 
-- Depends on: current-conditions.
-- Acceptance: allowing permission opens the local forecast; denying shows a message and the app stays usable.
-- Tests: mock `navigator.geolocation` for success, denied and unsupported cases; assert navigation and messages.
+<!-- Any extra notes -->
 
 ## Completed Features
 
@@ -30,3 +26,4 @@ In Progress
 - **Hourly Forecast:** City page strip of the next 24 hours from the current hour, with Now label, units-aware temps and snap scrolling; see `src/components/hourly/`, `src/utils/hourly.ts`.
 - **Daily Forecast:** City page 7-day list with weekday, icon, condition, rain chance and low–high, expandable sunrise/sunset/UV; see `src/components/daily/`, `src/utils/daily.ts`.
 - **Saved Locations:** Persisted favorites (deduped by coordinates, capped at 10) with a City page save button and Home cards with per-card weather; see `src/store/useAppStore.ts`, `src/components/favorites/`.
+- **Geolocation:** Click-only "Use my location" button beside search, rounded coordinates, reverse-geocoded city name and friendly error messages; see `src/hooks/useGeolocation.ts`, `src/components/UseMyLocationButton.tsx`.

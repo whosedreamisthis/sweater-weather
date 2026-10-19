@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router'
 import { GEOLOCATION_MESSAGES, useGeolocation } from '../hooks/useGeolocation'
 import { useReverseGeocodeMutation } from '../hooks/useReverseGeocode'
+import { cityPath } from '../utils/routes'
 import styles from './UseMyLocationButton.module.css'
 
 export function UseMyLocationButton() {
@@ -16,7 +17,7 @@ export function UseMyLocationButton() {
   function handleClick() {
     locate(async (coords) => {
       const name = await lookUpName(coords)
-      navigate(`/city/${coords.latitude}/${coords.longitude}?name=${encodeURIComponent(name)}`)
+      navigate(cityPath(coords.latitude, coords.longitude, name))
     })
   }
 

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import type { Location } from '../api/types'
 import { useCitySearch } from '../hooks/useCitySearch'
 import { useDebouncedValue } from '../hooks/useDebouncedValue'
+import { cityPath } from '../utils/routes'
 import styles from './SearchBox.module.css'
 import { UseMyLocationButton } from './UseMyLocationButton'
 
@@ -95,9 +96,7 @@ export function SearchBox() {
     setActiveIndex(-1)
     setQuery(city.name)
     setOpen(false)
-    navigate(
-      `/city/${city.latitude}/${city.longitude}?name=${encodeURIComponent(city.name)}`,
-    )
+    navigate(cityPath(city.latitude, city.longitude, city.name))
   }
 
   return (

@@ -1,4 +1,5 @@
 import { Link } from 'react-router'
+import { cityPath } from '../../utils/routes'
 import { LocationWeather } from '../favorites/LocationWeather'
 import styles from './PopularCities.module.css'
 
@@ -19,7 +20,7 @@ export function PopularCities() {
       </h2>
       <ul className={styles.grid}>
         {POPULAR_CITIES.map((city) => {
-          const href = `/city/${city.latitude}/${city.longitude}?name=${encodeURIComponent(city.name)}`
+          const href = cityPath(city.latitude, city.longitude, city.name)
           return (
             <li key={city.name} className={styles.card}>
               <Link to={href} className={styles.link}>

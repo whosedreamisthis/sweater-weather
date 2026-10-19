@@ -1,6 +1,8 @@
+import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useParams, useSearchParams } from 'react-router'
 import { ApiError } from '../api/http'
+import { reverseGeocode } from '../api/reverseGeocoding'
 import { AirQualityCard } from '../components/airquality/AirQualityCard'
 import { CurrentWeather } from '../components/current/CurrentWeather'
 import { CurrentWeatherSkeleton } from '../components/current/CurrentWeatherSkeleton'
@@ -24,10 +26,19 @@ export function City() {
   const [search] = useSearchParams()
   const lat = Number(params.lat)
   const lon = Number(params.lon)
-  const name = search.get('name')?.trim() || `${params.lat}, ${params.lon}`
+  const givenName = search.get('name')?.trim()
 
   const now = useNow()
   const forecast = useForecast(lat, lon)
+
+  // Pasted/shared coordinate links carry no name; look one up once the forecast confirms they're valid.
+  const lookup = useQuery({
+    queryKey: ['reverse-geocode', lat, lon],
+    queryFn: () => reverseGeocode(lat, lon),
+    enabled: !givenName && forecast.isSuccess,
+    staleTime: Infinity,
+  })
+  const name = givenName || lookup.data || `${params.lat}, ${params.lon}`
 
   useEffect(() => {
     document.title = `${name} · ${APP_NAME}`

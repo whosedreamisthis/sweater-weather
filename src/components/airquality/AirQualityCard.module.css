@@ -1,5 +1,5 @@
 .card {
-  --aqi-color: #16a34a;
+  --aqi-color: var(--aqi-0);
   max-width: 640px;
   margin: var(--space-4) auto 0;
   padding: var(--space-4) var(--space-6);
@@ -10,19 +10,19 @@
 }
 
 .card[data-level='1'] {
-  --aqi-color: #ca8a04;
+  --aqi-color: var(--aqi-1);
 }
 .card[data-level='2'] {
-  --aqi-color: #ea580c;
+  --aqi-color: var(--aqi-2);
 }
 .card[data-level='3'] {
-  --aqi-color: #dc2626;
+  --aqi-color: var(--aqi-3);
 }
 .card[data-level='4'] {
-  --aqi-color: #9333ea;
+  --aqi-color: var(--aqi-4);
 }
 .card[data-level='5'] {
-  --aqi-color: #7f1d1d;
+  --aqi-color: var(--aqi-5);
 }
 
 .heading {
@@ -47,7 +47,7 @@
   height: 3rem;
   padding-inline: var(--space-2);
   font-size: 1rem;
-  color: #fff;
+  color: var(--color-on-aqi);
   background: var(--aqi-color);
   border-radius: 999px;
 }

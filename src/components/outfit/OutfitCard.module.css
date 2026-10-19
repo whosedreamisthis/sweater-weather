@@ -2,7 +2,7 @@
   max-width: 640px;
   margin: var(--space-4) auto 0;
   padding: var(--space-4) var(--space-6);
-  background: linear-gradient(135deg, #ffe3f1 0%, #e6dcff 100%);
+  background: var(--gradient-outfit);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
 }

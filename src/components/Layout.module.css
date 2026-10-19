@@ -14,7 +14,7 @@
   background: var(--color-surface);
   border-bottom: 4px solid transparent;
   border-image: var(--gradient-brand) 1;
-  box-shadow: 0 4px 18px rgba(109, 40, 255, 0.12);
+  box-shadow: var(--shadow-header);
 }
 
 .brand {
@@ -23,6 +23,7 @@
   align-items: center;
   gap: var(--space-2);
   font-size: 1.25rem;
+  min-height: var(--touch-target);
   color: var(--color-text);
   text-decoration: none;
 }
@@ -31,6 +32,7 @@
 .search {
   order: 3;
   flex-basis: 100%;
+  max-width: 640px;
 }
 
 .main {
@@ -49,7 +51,8 @@
 }
 
 .settings {
-  padding: 0;
+  min-height: var(--touch-target);
+  padding: 0 var(--space-2);
   font: inherit;
   color: var(--color-primary);
   background: none;

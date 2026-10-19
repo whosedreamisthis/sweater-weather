@@ -14,6 +14,7 @@
   margin: 0;
   padding: 0 0 var(--space-2);
   list-style: none;
+  position: relative;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
 }
@@ -32,7 +33,8 @@
 }
 
 .item[data-now] {
-  border-color: var(--accent-day);
+  border-color: var(--color-primary);
+  box-shadow: inset 0 0 0 1px var(--color-primary);
   font-weight: 700;
 }
 

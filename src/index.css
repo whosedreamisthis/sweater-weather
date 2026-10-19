@@ -6,10 +6,29 @@
   --color-text: #1a1446;
   --color-text-muted: #5a5190;
   --color-border: #d6cffa;
+  --color-border-strong: #8076bd;
   --color-primary: #6d28ff;
   --color-primary-contrast: #ffffff;
   --color-danger: #e11d48;
   --gradient-brand: linear-gradient(90deg, #ff3d81 0%, #ff8a1f 50%, #ffc53d 100%);
+
+  --gradient-outfit: linear-gradient(135deg, #ffe3f1 0%, #e6dcff 100%);
+  --color-on-aqi: #ffffff;
+
+  /* Air quality levels (all >= 4.5:1 against white text) */
+  --aqi-0: #15803d;
+  --aqi-1: #a16207;
+  --aqi-2: #c2410c;
+  --aqi-3: #dc2626;
+  --aqi-4: #9333ea;
+  --aqi-5: #7f1d1d;
+
+  /* Elevation */
+  --shadow-header: 0 4px 18px rgba(109, 40, 255, 0.12);
+  --shadow-card: 0 10px 30px rgba(26, 20, 70, 0.12);
+  --shadow-popover: 0 8px 24px rgb(20 33 61 / 12%);
+  --shadow-modal: 0 12px 40px rgb(20 33 61 / 0.3);
+  --color-overlay: rgb(20 33 61 / 0.5);
 
   /* Weather accents */
   --accent-day: #ff9f0a;
@@ -35,6 +54,7 @@
   --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
   --content-width: 960px;
+  --touch-target: 2.75rem;
 }
 
 /* Reset */

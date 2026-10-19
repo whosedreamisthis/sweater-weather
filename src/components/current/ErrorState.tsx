@@ -9,7 +9,7 @@ type Props = {
 export function ErrorState({ title, message, onRetry }: Props) {
   return (
     <div className={styles.error} role="alert">
-      <h2 className={styles.title}>{title}</h2>
+      <h1 className={styles.title}>{title}</h1>
       <p>{message}</p>
       {onRetry && (
         <button type="button" className={styles.retry} onClick={onRetry}>

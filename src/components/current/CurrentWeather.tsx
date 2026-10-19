@@ -38,9 +38,9 @@ export function CurrentWeather({ name, current, units, updatedMinutes, isRefetch
       aria-labelledby="current-heading"
     >
       <header className={styles.top}>
-        <h2 id="current-heading" className={styles.name}>
+        <h1 id="current-heading" className={styles.name}>
           {name}
-        </h2>
+        </h1>
         <p className={styles.updated}>
           {formatUpdated(updatedMinutes)}
           {isRefetching && <span className={styles.refreshing}> · Refreshing…</span>}

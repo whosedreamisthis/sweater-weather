@@ -5,13 +5,13 @@
   padding: var(--space-6);
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--card-accent) 22%, white) 0%,
+    color-mix(in srgb, var(--card-accent) 22%, var(--color-surface)) 0%,
     var(--color-surface) 55%
   );
-  border: 1px solid color-mix(in srgb, var(--card-accent) 40%, white);
+  border: 1px solid color-mix(in srgb, var(--card-accent) 40%, var(--color-surface));
   border-top: 6px solid var(--card-accent);
   border-radius: var(--radius-lg);
-  box-shadow: 0 10px 30px rgba(26, 20, 70, 0.12);
+  box-shadow: var(--shadow-card);
 }
 
 .card[data-time='night'] {
@@ -84,8 +84,12 @@
 
 .stat {
   padding: var(--space-3);
-  background: color-mix(in srgb, var(--card-accent) 14%, white);
+  background: color-mix(in srgb, var(--card-accent) 14%, var(--color-surface));
   border-radius: var(--radius-md);
+}
+
+.stat:last-child:nth-child(odd) {
+  grid-column: span 2;
 }
 
 .stat dt {
@@ -152,5 +156,13 @@
 @media (min-width: 600px) {
   .stats {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .stat:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+
+  .stat:last-child:nth-child(3n + 2) {
+    grid-column: span 2;
   }
 }

@@ -10,11 +10,12 @@
 }
 
 .button {
+  min-height: var(--touch-target);
   padding: var(--space-2) var(--space-4);
   font: inherit;
   color: var(--color-text);
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
   cursor: pointer;
 }
@@ -39,6 +40,7 @@
 
 /* Same box as .button (padding, border, text) so the loaded button doesn't shift the page. */
 .skeleton {
+  min-height: var(--touch-target);
   padding: var(--space-2) var(--space-4);
   font: inherit;
   color: transparent;

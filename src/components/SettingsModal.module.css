@@ -68,7 +68,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-4);
-  background: rgb(20 33 61 / 0.5);
+  background: var(--color-overlay);
 }
 
 .dialog {
@@ -79,7 +79,7 @@
   padding: var(--space-5, 1.5rem);
   background: var(--color-bg);
   border-radius: var(--radius-lg);
-  box-shadow: 0 12px 40px rgb(20 33 61 / 0.3);
+  box-shadow: var(--shadow-modal);
 }
 
 .head {

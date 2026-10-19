@@ -50,6 +50,17 @@ export type DailyPoint = {
 /** The forecast endpoint only knows coordinates and timezone, not a place name. */
 export type ForecastLocation = Pick<Location, 'latitude' | 'longitude' | 'timezone'>
 
+/** Air quality can be missing for a region, so every reading is nullable. */
+export type AirQuality = {
+  time: string
+  /** US AQI, 0–500. */
+  usAqi: number | null
+  /** Fine particles, µg/m³. */
+  pm25: number | null
+  /** Coarse particles, µg/m³. */
+  pm10: number | null
+}
+
 export type Forecast = {
   location: ForecastLocation
   current: CurrentWeather

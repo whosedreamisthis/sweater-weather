@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useParams, useSearchParams } from 'react-router'
 import { ApiError } from '../api/http'
+import { AirQualityCard } from '../components/airquality/AirQualityCard'
 import { CurrentWeather } from '../components/current/CurrentWeather'
 import { CurrentWeatherSkeleton } from '../components/current/CurrentWeatherSkeleton'
 import { ErrorState } from '../components/current/ErrorState'
@@ -81,6 +82,7 @@ export function City() {
         updatedMinutes={minutesAgo(forecast.dataUpdatedAt, now)}
         isRefetching={forecast.isFetching}
       />
+      <AirQualityCard lat={lat} lon={lon} />
       <OutfitCard current={current} hours={upcoming} units={forecast.units} />
       <HourlyList hours={upcoming} daily={daily} units={forecast.units} />
       <DailyList days={daily} units={forecast.units} />

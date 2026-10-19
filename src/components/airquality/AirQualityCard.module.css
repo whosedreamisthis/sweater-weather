@@ -1,0 +1,130 @@
+.card {
+  --aqi-color: #16a34a;
+  max-width: 640px;
+  margin: var(--space-4) auto 0;
+  padding: var(--space-4) var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 6px solid var(--aqi-color);
+  border-radius: var(--radius-lg);
+}
+
+.card[data-level='1'] {
+  --aqi-color: #ca8a04;
+}
+.card[data-level='2'] {
+  --aqi-color: #ea580c;
+}
+.card[data-level='3'] {
+  --aqi-color: #dc2626;
+}
+.card[data-level='4'] {
+  --aqi-color: #9333ea;
+}
+.card[data-level='5'] {
+  --aqi-color: #7f1d1d;
+}
+
+.heading {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+}
+
+.badge {
+  display: grid;
+  place-items: center;
+  min-width: 3rem;
+  height: 3rem;
+  padding-inline: var(--space-2);
+  font-size: 1rem;
+  color: #fff;
+  background: var(--aqi-color);
+  border-radius: 999px;
+}
+
+.value {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.unit {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.category {
+  margin: 0;
+  font-weight: 600;
+}
+
+.note {
+  margin-block: var(--space-3);
+  color: var(--color-text-muted);
+}
+
+.particles {
+  display: flex;
+  gap: var(--space-6);
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.particles dt {
+  color: var(--color-text-muted);
+}
+
+.particles dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.message {
+  margin-block: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.retry {
+  padding: var(--space-1) var(--space-4);
+  font: inherit;
+  font-weight: 600;
+  color: var(--color-primary-contrast);
+  background: var(--color-primary);
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.skeleton {
+  background: var(--color-border);
+  border-radius: var(--radius-sm);
+  opacity: 0.6;
+}
+
+.skelHeading {
+  width: 7rem;
+  height: 0.875rem;
+}
+
+.skelValue {
+  width: 10rem;
+  height: 2.5rem;
+  margin-block: var(--space-3);
+}
+
+.skelLine {
+  width: 70%;
+  height: 1rem;
+}

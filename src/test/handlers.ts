@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import type { RequestHandler } from 'msw'
+import type { RawAirQuality } from '../api/airQuality'
 import type { RawForecast } from '../api/weather'
 
 export const GEOCODING_URL = 'https://geocoding-api.open-meteo.com/v1/search'
@@ -25,6 +26,14 @@ export const geocodingFixture = {
       timezone: 'America/Toronto',
     },
   ],
+}
+
+export const AIR_QUALITY_URL = 'https://air-quality-api.open-meteo.com/v1/air-quality'
+
+export const airQualityFixture: RawAirQuality = {
+  latitude: 51.5,
+  longitude: -0.12,
+  current: { time: '2026-10-18T12:00', us_aqi: 42, pm2_5: 8.4, pm10: 14.9 },
 }
 
 export const forecastFixture: RawForecast = {
@@ -65,4 +74,5 @@ export const forecastFixture: RawForecast = {
 export const handlers: RequestHandler[] = [
   http.get(GEOCODING_URL, () => HttpResponse.json(geocodingFixture)),
   http.get(FORECAST_URL, () => HttpResponse.json(forecastFixture)),
+  http.get(AIR_QUALITY_URL, () => HttpResponse.json(airQualityFixture)),
 ]

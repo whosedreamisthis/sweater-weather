@@ -30,3 +30,4 @@ Completed
 - **Vibrant Colors:** Saturated palette tokens, gradient page background and header underline, weather-tinted current-conditions card; see `src/index.css`, `src/components/current/CurrentWeather.module.css`.
 - **What to Wear:** Rule-based outfit card on the City page from feels-like, worst 6-hour rain chance, wind and UV; see `src/utils/outfit.ts`, `src/components/outfit/`.
 - **Air Quality:** City page card with US AQI, category, health note and PM2.5/PM10, with its own loading/error/unavailable states; see `src/api/airQuality.ts`, `src/components/airquality/`.
+- **Home Page Content:** Hero heading, popular cities grid with live weather and how-it-works strip below saved locations; city skeleton reserves save button space; see `src/components/home/`, `src/components/favorites/LocationWeather.tsx`.

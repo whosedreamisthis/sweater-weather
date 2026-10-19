@@ -145,6 +145,52 @@ export function transformForecast(raw: RawForecast): Forecast {
   }
 }
 
+const COMPACT_VARS = 'temperature_2m,is_day,weather_code'
+
+export type CompactWeather = {
+  temperature: number
+  weatherCode: number
+  isDay: boolean
+  temperatureUnit: Units['temperature']
+}
+
+export function isRawCompactWeather(value: unknown): value is {
+  current: { temperature_2m: number; is_day: number; weather_code: number }
+} {
+  if (!isRecord(value) || !isRecord(value.current)) return false
+  const { current } = value
+  return (
+    Number.isFinite(current.temperature_2m) &&
+    Number.isFinite(current.is_day) &&
+    Number.isFinite(current.weather_code)
+  )
+}
+
+/** Just the icon and temperature, for cards that don't need hourly or daily data. */
+export async function fetchCompactWeather(
+  lat: number,
+  lon: number,
+  temperatureUnit: Units['temperature'],
+): Promise<CompactWeather> {
+  validateCoordinates(lat, lon)
+  const params = new URLSearchParams({
+    latitude: String(lat),
+    longitude: String(lon),
+    current: COMPACT_VARS,
+    temperature_unit: temperatureUnit,
+    timezone: 'auto',
+  })
+  const raw = await fetchJson(`${FORECAST_URL}?${params}`)
+  if (!isRawCompactWeather(raw)) throw unexpectedResponse()
+  const { current } = raw
+  return {
+    temperature: current.temperature_2m,
+    weatherCode: current.weather_code,
+    isDay: current.is_day === 1,
+    temperatureUnit,
+  }
+}
+
 export async function fetchForecast(lat: number, lon: number, units: Units): Promise<Forecast> {
   validateCoordinates(lat, lon)
   const params = new URLSearchParams({

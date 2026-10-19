@@ -7,6 +7,8 @@ import { useCitySearch } from '../hooks/useCitySearch'
 import { useDebouncedValue } from '../hooks/useDebouncedValue'
 import { cityPath } from '../utils/routes'
 import styles from './SearchBox.module.css'
+import { ClearIcon, SearchIcon } from './SearchIcons'
+import { SearchResultsPanel } from './SearchResultsPanel'
 import { UseMyLocationButton } from './UseMyLocationButton'
 
 const DEBOUNCE_MS = 300
@@ -23,7 +25,7 @@ export function SearchBox() {
 
   useEffect(() => {
     function handlePointerDown(event: PointerEvent) {
-      if (!containerRef.current?.contains(event.target as Node)) {
+      if (!(event.target instanceof Node) || !containerRef.current?.contains(event.target)) {
         setOpen(false)
         setActiveIndex(-1)
       }
@@ -101,102 +103,51 @@ export function SearchBox() {
   return (
     <div className={styles.searchBox} ref={containerRef}>
       <div className={styles.field}>
-      <label htmlFor={inputId} className={styles.label}>
-        Search for a city
-      </label>
-      <svg
-        className={styles.icon}
-        viewBox="0 0 24 24"
-        width="18"
-        height="18"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        aria-hidden="true"
-      >
-        <circle cx="11" cy="11" r="7" />
-        <path d="m20 20-3.5-3.5" />
-      </svg>
-      <input
-        id={inputId}
-        ref={inputRef}
-        className={styles.input}
-        type="text"
-        role="combobox"
-        aria-expanded={showPanel}
-        aria-controls={showPanel ? listboxId : undefined}
-        aria-activedescendant={activeOption === -1 ? undefined : optionId(activeOption)}
-        aria-autocomplete="list"
-        autoComplete="off"
-        placeholder="Search for a city…"
-        value={query}
-        onChange={(event) => {
-          setQuery(event.target.value)
-          setOpen(true)
-          setActiveIndex(-1)
-        }}
-        onFocus={() => setOpen(true)}
-        onKeyDown={handleKeyDown}
-      />
-      {query && (
-        <button type="button" className={styles.clear} aria-label="Clear search" onClick={clear}>
-          <svg
-            viewBox="0 0 24 24"
-            width="16"
-            height="16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            aria-hidden="true"
-          >
-            <path d="M6 6l12 12M18 6 6 18" />
-          </svg>
-        </button>
-      )}
-      <div role="status" aria-live="polite" className={styles.status}>
-        {status}
-      </div>
-      {showPanel && (
-        <div className={styles.panel}>
-          {isLoading ? (
-            <p className={styles.message}>Searching…</p>
-          ) : isError ? (
-            <div className={styles.message}>
-              <p>Couldn’t load results.</p>
-              <button type="button" className={styles.retry} onClick={() => refetch()}>
-                Retry
-              </button>
-            </div>
-          ) : results.length === 0 ? (
-            <p className={styles.message}>No cities found</p>
-          ) : null}
-          <ul
-            id={listboxId}
-            role="listbox"
-            aria-label="Cities"
-            className={styles.list}
-            hidden={isLoading || isError || results.length === 0}
-          >
-            {results.map((city, index) => (
-              <li
-                key={city.id}
-                id={optionId(index)}
-                role="option"
-                aria-selected={index === activeOption}
-                className={`${styles.option} ${index === activeOption ? styles.active : ''}`}
-                onClick={() => selectCity(city)}
-              >
-                <span className={styles.name}>{city.name}</span>
-                <span className={styles.detail}>
-                  {[city.admin1, city.country].filter(Boolean).join(', ')}
-                </span>
-              </li>
-            ))}
-          </ul>
+        <label htmlFor={inputId} className={styles.label}>
+          Search for a city
+        </label>
+        <SearchIcon />
+        <input
+          id={inputId}
+          ref={inputRef}
+          className={styles.input}
+          type="text"
+          role="combobox"
+          aria-expanded={showPanel}
+          aria-controls={showPanel ? listboxId : undefined}
+          aria-activedescendant={activeOption === -1 ? undefined : optionId(activeOption)}
+          aria-autocomplete="list"
+          autoComplete="off"
+          placeholder="Search for a city…"
+          value={query}
+          onChange={(event) => {
+            setQuery(event.target.value)
+            setOpen(true)
+            setActiveIndex(-1)
+          }}
+          onFocus={() => setOpen(true)}
+          onKeyDown={handleKeyDown}
+        />
+        {query && (
+          <button type="button" className={styles.clear} aria-label="Clear search" onClick={clear}>
+            <ClearIcon />
+          </button>
+        )}
+        <div role="status" aria-live="polite" className={styles.status}>
+          {status}
         </div>
-      )}
+        {showPanel && (
+          <SearchResultsPanel
+            listboxId={listboxId}
+            results={results}
+            isLoading={isLoading}
+            isError={isError}
+            activeOption={activeOption}
+            optionId={optionId}
+            onSelect={selectCity}
+            onRetry={() => void refetch()}
+          />
+        )}
       </div>
       <UseMyLocationButton />
     </div>

@@ -57,6 +57,34 @@ describe('UseMyLocationButton', () => {
     )
   })
 
+  it('stays disabled while the city lookup is pending, then re-enables after navigating', async () => {
+    let release: () => void = () => {}
+    const gate = new Promise<void>((resolve) => {
+      release = resolve
+    })
+    server.use(
+      http.get(REVERSE_GEOCODING_URL, async () => {
+        await gate
+        return HttpResponse.json({ city: 'London' })
+      }),
+    )
+    mockGeolocation((ok) =>
+      ok({ coords: { latitude: 51.50735, longitude: -0.12776 } } as GeolocationPosition),
+    )
+    setup()
+    await click()
+
+    // Geolocation has succeeded; the name lookup is still in flight.
+    expect(await screen.findByRole('button', { name: 'Locating…' })).toBeDisabled()
+
+    release()
+    await waitFor(() =>
+      expect(screen.getByTestId('location')).toHaveTextContent('/city/51.51/-0.13?name=London'),
+    )
+    // The button lives in the persistent layout, so it must not stay stuck.
+    expect(await screen.findByRole('button', { name: 'Use my location' })).toBeEnabled()
+  })
+
   it('shows a message when permission is denied and stays usable', async () => {
     mockGeolocation((_ok, err) => err({ code: 1 } as GeolocationPositionError))
     setup()

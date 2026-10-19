@@ -1,20 +1,22 @@
 :root {
   /* Color */
-  --color-bg: #f4f7fb;
+  --color-bg: #eaf2ff;
+  --color-bg-gradient: linear-gradient(160deg, #ffe3f1 0%, #e0ecff 45%, #d3f6ee 100%);
   --color-surface: #ffffff;
-  --color-text: #14213d;
-  --color-text-muted: #5b6785;
-  --color-border: #d9e0ee;
-  --color-primary: #2f6fed;
+  --color-text: #1a1446;
+  --color-text-muted: #5a5190;
+  --color-border: #d6cffa;
+  --color-primary: #6d28ff;
   --color-primary-contrast: #ffffff;
-  --color-danger: #c62828;
+  --color-danger: #e11d48;
+  --gradient-brand: linear-gradient(90deg, #ff3d81 0%, #ff8a1f 50%, #ffc53d 100%);
 
   /* Weather accents */
-  --accent-day: #f2b01e;
-  --accent-night: #3d4f8f;
-  --accent-rain: #3b82c4;
-  --accent-snow: #8fb8d9;
-  --accent-storm: #6a4c93;
+  --accent-day: #ff9f0a;
+  --accent-night: #5b3df5;
+  --accent-rain: #0ea5e9;
+  --accent-snow: #38d5ff;
+  --accent-storm: #c026d3;
 
   /* Spacing */
   --space-1: 0.25rem;
@@ -55,7 +57,7 @@ body {
   font-family: var(--font-sans);
   line-height: 1.5;
   color: var(--color-text);
-  background: var(--color-bg);
+  background: var(--color-bg-gradient) fixed, var(--color-bg);
   -webkit-font-smoothing: antialiased;
 }
 

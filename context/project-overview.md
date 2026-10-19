@@ -260,6 +260,7 @@ None. This is a personal/learning project. Note that Open-Meteo's free tier is f
 - **Mobile first**, responsive up to desktop.
 - **Layout**: header with search → hero card (current conditions) → hourly horizontal scroller → 7-day list.
 - **Dynamic visuals**: background or accent changes with condition and day/night.
+- **Vibrant palette**: electric-violet primary, deep-indigo text, and a pink/blue/mint gradient page background. The header has a pink→orange→yellow gradient underline (`--gradient-brand`). Weather accents are saturated (orange day, indigo night, sky-blue rain, cyan snow, magenta storm). The current-conditions card and its stat tiles are tinted from the active accent with `color-mix`, so the card color follows the weather. All colors are tokens in `index.css`.
 - **States**: skeleton loaders matching final layout, friendly error messages with Retry, empty state for no search results, and a distinct message for denied geolocation.
 - **Accessibility**: semantic HTML, labelled inputs, combobox pattern for search autocomplete, keyboard navigation, sufficient contrast, `aria-live` for loading/error updates, and no information conveyed by icon alone.
 - **Theme**: light/dark following system preference by default.

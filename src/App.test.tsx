@@ -17,7 +17,7 @@ describe('app shell', () => {
     renderApp()
 
     expect(screen.getByRole('link', { name: 'SweaterWeather' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Home' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1, name: /Know what to wear/ })).toBeInTheDocument()
   })
 
   it('shows a single search box: in the page on home, in the header elsewhere', () => {

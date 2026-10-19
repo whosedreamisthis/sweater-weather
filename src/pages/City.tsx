@@ -6,6 +6,7 @@ import { CurrentWeather } from '../components/current/CurrentWeather'
 import { CurrentWeatherSkeleton } from '../components/current/CurrentWeatherSkeleton'
 import { ErrorState } from '../components/current/ErrorState'
 import { FavoriteButton } from '../components/favorites/FavoriteButton'
+import { FavoriteButtonSkeleton } from '../components/favorites/FavoriteButtonSkeleton'
 import { DailyList } from '../components/daily/DailyList'
 import { DailyListSkeleton } from '../components/daily/DailyListSkeleton'
 import { OutfitCard } from '../components/outfit/OutfitCard'
@@ -54,6 +55,7 @@ export function City() {
   if (!forecast.data) {
     return (
       <div aria-live="polite">
+        <FavoriteButtonSkeleton />
         <CurrentWeatherSkeleton />
         <HourlyListSkeleton />
         <DailyListSkeleton />

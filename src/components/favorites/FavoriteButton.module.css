@@ -36,3 +36,27 @@
 .message:empty {
   display: none;
 }
+
+/* Same box as .button (padding, border, text) so the loaded button doesn't shift the page. */
+.skeleton {
+  padding: var(--space-2) var(--space-4);
+  font: inherit;
+  color: transparent;
+  background: var(--color-border);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  user-select: none;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}

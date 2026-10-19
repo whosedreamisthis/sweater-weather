@@ -39,8 +39,7 @@
   outline-offset: 2px;
 }
 
-.remove:focus-visible,
-.retry:focus-visible {
+.remove:focus-visible {
   outline: 3px solid var(--color-text);
   outline-offset: 2px;
 }
@@ -49,37 +48,18 @@
   font-weight: 600;
 }
 
-.country,
-.status {
+.country {
   color: var(--color-text-muted);
   font-size: 0.875rem;
 }
 
-.weather {
-  font-size: 1.25rem;
-  white-space: nowrap;
-}
-
-.retry,
-.remove {
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: 0;
-  cursor: pointer;
-}
-
-.retry,
 .remove {
   position: relative;
   z-index: 1;
-}
-
-.retry {
-  text-decoration: underline;
-}
-
-.remove {
   padding: var(--space-2);
+  font: inherit;
   color: var(--color-text-muted);
+  background: none;
+  border: 0;
+  cursor: pointer;
 }

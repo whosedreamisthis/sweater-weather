@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import type { Location } from '../api/types'
@@ -33,15 +33,39 @@ describe('Home favorites', () => {
     expect(screen.getByText(/No saved locations yet/)).toBeInTheDocument()
   })
 
+  it('shows popular cities and how it works', async () => {
+    renderWithProviders(<Home />)
+
+    expect(screen.getByRole('heading', { name: 'Popular cities' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Tokyo/ })).toHaveAttribute(
+      'href',
+      '/city/35.68/139.69?name=Tokyo',
+    )
+    expect(screen.getByRole('heading', { name: 'How it works' })).toBeInTheDocument()
+    expect((await screen.findAllByText(/14°C/)).length).toBeGreaterThan(0)
+  })
+
+  it('keeps popular cities and how it works below saved locations', () => {
+    useAppStore.setState({ favorites: [london] })
+    renderWithProviders(<Home />)
+
+    const saved = screen.getByRole('heading', { name: 'Saved locations' })
+    const popular = screen.getByRole('heading', { name: 'Popular cities' })
+    const how = screen.getByRole('heading', { name: 'How it works' })
+    expect(saved.compareDocumentPosition(popular) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(popular.compareDocumentPosition(how) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
   it('renders a card per favorite with temperature and links to the city', async () => {
     useAppStore.setState({ favorites: [london] })
     renderWithProviders(<Home />)
 
     expect(await screen.findByText(/14°C/)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /London/ })).toHaveAttribute(
-      'href',
-      '/city/51.5/-0.12?name=London',
-    )
+    expect(
+      within(screen.getByRole('region', { name: 'Saved locations' })).getByRole('link', {
+        name: /London/,
+      }),
+    ).toHaveAttribute('href', '/city/51.5/-0.12?name=London')
   })
 
   it('removes a favorite', async () => {

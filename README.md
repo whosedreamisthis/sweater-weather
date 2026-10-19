@@ -14,6 +14,7 @@ Live: https://whosedreamisthis.github.io/sweater-weather/
 - **Air quality:** US AQI with category, health note and PM2.5/PM10.
 - **Saved locations:** up to 10 favorites, stored in your browser.
 - **Units:** °C/°F, km/h or mph, mm or inches, defaulting by locale and remembered between visits.
+- **Theme:** light, dark or system (follows your OS and updates live), chosen in Settings under Appearance, remembered between visits and applied before first paint so there's no flash.
 
 ## Stack
 

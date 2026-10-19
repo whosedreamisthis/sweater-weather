@@ -51,6 +51,7 @@ describe('City page', () => {
   it('shows a skeleton while loading', () => {
     renderCity('/city/51.5/-0.12')
     expect(screen.getByLabelText('Loading current weather')).toBeInTheDocument()
+    expect(screen.getByRole('status')).toHaveTextContent('Loading weather…')
   })
 
   it('shows an error and recovers on Retry', async () => {

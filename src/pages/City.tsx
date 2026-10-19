@@ -17,6 +17,7 @@ import { useNow } from '../hooks/useNow'
 import { useReverseGeocode } from '../hooks/useReverseGeocode'
 import { minutesAgo } from '../utils/format'
 import { sliceHourly } from '../utils/hourly'
+import styles from './City.module.css'
 
 const APP_NAME = 'SweaterWeather'
 
@@ -60,7 +61,11 @@ export function City() {
 
   if (!forecast.data) {
     return (
-      <div aria-live="polite">
+      <div>
+        {/* A live region needs text to announce; the skeletons only carry labels. */}
+        <p role="status" className={styles.visuallyHidden}>
+          Loading weather…
+        </p>
         <FavoriteButtonSkeleton />
         <CurrentWeatherSkeleton />
         <HourlyListSkeleton />

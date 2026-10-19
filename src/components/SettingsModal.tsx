@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
+import type { KeyboardEvent } from 'react'
 import type { Units } from '../api/types'
 import { useAppStore } from '../store/useAppStore'
 import styles from './SettingsModal.module.css'
@@ -54,10 +55,18 @@ function UnitGroup<K extends keyof Units>({
 
 type Props = { onClose: () => void }
 
-const FOCUSABLE = 'button, input, [href], [tabindex]:not([tabindex="-1"])'
+const FOCUSABLE = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(', ')
 
 export function SettingsModal({ onClose }: Props) {
   const dialogRef = useRef<HTMLDivElement>(null)
+  const titleId = useId()
 
   useEffect(() => {
     const previouslyFocused = document.activeElement as HTMLElement | null
@@ -65,7 +74,7 @@ export function SettingsModal({ onClose }: Props) {
     return () => previouslyFocused?.focus()
   }, [])
 
-  function onKeyDown(event: React.KeyboardEvent) {
+  function onKeyDown(event: KeyboardEvent) {
     if (event.key === 'Escape') {
       onClose()
       return
@@ -73,6 +82,7 @@ export function SettingsModal({ onClose }: Props) {
     if (event.key !== 'Tab') return
     // Keep Tab inside the dialog.
     const items = [...(dialogRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? [])]
+    if (items.length === 0) return
     const first = items[0]
     const last = items[items.length - 1]
     if (event.shiftKey && document.activeElement === first) {
@@ -94,11 +104,11 @@ export function SettingsModal({ onClose }: Props) {
         className={styles.dialog}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="settings-title"
+        aria-labelledby={titleId}
         onKeyDown={onKeyDown}
       >
         <div className={styles.head}>
-          <h2 id="settings-title" className={styles.title}>
+          <h2 id={titleId} className={styles.title}>
             Settings
           </h2>
           <button type="button" className={styles.close} onClick={onClose} aria-label="Close settings">

@@ -1,28 +1,22 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import { reverseGeocode } from '../api/reverseGeocoding'
 import { GEOLOCATION_MESSAGES, useGeolocation } from '../hooks/useGeolocation'
+import { useReverseGeocodeMutation } from '../hooks/useReverseGeocode'
 import styles from './UseMyLocationButton.module.css'
 
 export function UseMyLocationButton() {
   const navigate = useNavigate()
   const { status, locate } = useGeolocation()
   // The geolocation status flips to 'success' before the city name lookup finishes,
-  // so track that second phase here to keep the button disabled until we navigate.
-  const [resolving, setResolving] = useState(false)
-  const loading = status === 'loading' || resolving
+  // so the mutation's pending state keeps the button disabled until we navigate. It
+  // resets on its own, which matters because the button lives in the persistent layout.
+  const { mutateAsync: lookUpName, isPending } = useReverseGeocodeMutation()
+  const loading = status === 'loading' || isPending
   const message = GEOLOCATION_MESSAGES[status]
 
   function handleClick() {
-    locate(async ({ latitude, longitude }) => {
-      setResolving(true)
-      try {
-        const name = await reverseGeocode(latitude, longitude)
-        navigate(`/city/${latitude}/${longitude}?name=${encodeURIComponent(name)}`)
-      } finally {
-        // The button lives in the persistent layout, so it survives navigation.
-        setResolving(false)
-      }
+    locate(async (coords) => {
+      const name = await lookUpName(coords)
+      navigate(`/city/${coords.latitude}/${coords.longitude}?name=${encodeURIComponent(name)}`)
     })
   }
 

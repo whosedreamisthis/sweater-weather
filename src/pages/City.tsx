@@ -1,8 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useParams, useSearchParams } from 'react-router'
 import { ApiError } from '../api/http'
-import { reverseGeocode } from '../api/reverseGeocoding'
 import { AirQualityCard } from '../components/airquality/AirQualityCard'
 import { CurrentWeather } from '../components/current/CurrentWeather'
 import { CurrentWeatherSkeleton } from '../components/current/CurrentWeatherSkeleton'
@@ -16,6 +14,7 @@ import { HourlyList } from '../components/hourly/HourlyList'
 import { HourlyListSkeleton } from '../components/hourly/HourlyListSkeleton'
 import { useForecast } from '../hooks/useForecast'
 import { useNow } from '../hooks/useNow'
+import { useReverseGeocode } from '../hooks/useReverseGeocode'
 import { minutesAgo } from '../utils/format'
 import { sliceHourly } from '../utils/hourly'
 
@@ -32,12 +31,7 @@ export function City() {
   const forecast = useForecast(lat, lon)
 
   // Pasted/shared coordinate links carry no name; look one up once the forecast confirms they're valid.
-  const lookup = useQuery({
-    queryKey: ['reverse-geocode', lat, lon],
-    queryFn: () => reverseGeocode(lat, lon),
-    enabled: !givenName && forecast.isSuccess,
-    staleTime: Infinity,
-  })
+  const lookup = useReverseGeocode(lat, lon, !givenName && forecast.isSuccess)
   const name = givenName || lookup.data || `${params.lat}, ${params.lon}`
 
   useEffect(() => {

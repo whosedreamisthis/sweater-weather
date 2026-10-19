@@ -64,7 +64,7 @@ describe('SearchBox', () => {
 
     await screen.findAllByRole('option')
 
-    expect(screen.getByRole('status')).toHaveTextContent('2 results available')
+    expect(screen.getAllByRole('status')[0]).toHaveTextContent('2 results available')
   })
 
   it('supports arrow keys and Enter to select', async () => {
@@ -184,7 +184,7 @@ describe('SearchBox', () => {
 
     // Shown in the dropdown and announced in the live region.
     expect(await screen.findAllByText('No cities found')).toHaveLength(2)
-    expect(screen.getByRole('status')).toHaveTextContent('No cities found')
+    expect(screen.getAllByRole('status')[0]).toHaveTextContent('No cities found')
   })
 
   it('shows an error with a working retry', async () => {

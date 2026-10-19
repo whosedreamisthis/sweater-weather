@@ -1,20 +1,24 @@
-# Current Feature
+# Current Feature: Geolocation
 
-<!-- Feature name and short description -->
+"Use my location" button.
 
 ## Status
 
-<!-- Not Started | In Progress | Complete -->
-
-Completed
+In Progress
 
 ## Goals
 
-<!-- Goals and requirements -->
+- `useGeolocation` hook wrapping `navigator.geolocation.getCurrentPosition` with states: idle, loading, success, denied, unavailable, timeout.
+- "Use my location" button on Home and in the search box; on success navigate to `/city/:lat/:lon` (name resolved via reverse geocoding if available, else "Current location").
+- Distinct, friendly messages for permission denied, unsupported browsers and timeouts, with a prompt to search manually.
+- Never request permission on page load, only on click.
+- Round coordinates (e.g. 2 decimals) for better query cache hits and privacy.
 
 ## Notes
 
-<!-- Any extra notes -->
+- Depends on: current-conditions.
+- Acceptance: allowing permission opens the local forecast; denying shows a message and the app stays usable.
+- Tests: mock `navigator.geolocation` for success, denied and unsupported cases; assert navigation and messages.
 
 ## Completed Features
 

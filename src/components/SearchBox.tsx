@@ -5,6 +5,7 @@ import type { Location } from '../api/types'
 import { useCitySearch } from '../hooks/useCitySearch'
 import { useDebouncedValue } from '../hooks/useDebouncedValue'
 import styles from './SearchBox.module.css'
+import { UseMyLocationButton } from './UseMyLocationButton'
 
 const MAX_RESULTS = 5
 const MIN_QUERY_LENGTH = 2
@@ -101,6 +102,7 @@ export function SearchBox() {
 
   return (
     <div className={styles.searchBox} ref={containerRef}>
+      <div className={styles.field}>
       <label htmlFor={inputId} className={styles.label}>
         Search for a city
       </label>
@@ -197,6 +199,8 @@ export function SearchBox() {
           </ul>
         </div>
       )}
+      </div>
+      <UseMyLocationButton />
     </div>
   )
 }

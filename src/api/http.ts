@@ -11,6 +11,15 @@ export class ApiError extends Error {
   }
 }
 
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+/** For a 2xx response whose body doesn't match the shape we expect. */
+export function unexpectedResponse(): ApiError {
+  return new ApiError('The weather service returned an unexpected response.', 502)
+}
+
 async function readErrorReason(response: Response): Promise<string> {
   try {
     const body: unknown = await response.json()

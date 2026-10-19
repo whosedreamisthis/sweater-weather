@@ -1,4 +1,4 @@
-import { ApiError, fetchJson } from './http'
+import { ApiError, fetchJson, isRecord } from './http'
 import type { Location } from './types'
 
 const GEOCODING_URL = 'https://geocoding-api.open-meteo.com/v1/search'
@@ -15,11 +15,24 @@ type RawLocation = {
   timezone?: string
 }
 
-/** Open-Meteo omits `results` entirely when nothing matches. */
-export function transformLocations(raw: { results?: RawLocation[] } | null): Location[] {
-  const results = raw?.results
+function isRawLocation(value: unknown): value is RawLocation {
+  return (
+    isRecord(value) &&
+    typeof value.id === 'number' &&
+    typeof value.name === 'string' &&
+    Number.isFinite(value.latitude) &&
+    Number.isFinite(value.longitude)
+  )
+}
+
+/**
+ * Open-Meteo omits `results` entirely when nothing matches.
+ * Items without a usable id, name or coordinates are dropped rather than routed to.
+ */
+export function transformLocations(raw: unknown): Location[] {
+  const results = isRecord(raw) ? raw.results : undefined
   if (!Array.isArray(results)) return []
-  return results.map((r) => ({
+  return results.filter(isRawLocation).map((r) => ({
     id: r.id,
     name: r.name,
     country: r.country ?? '',
@@ -41,6 +54,5 @@ export async function searchCities(query: string): Promise<Location[]> {
     language: 'en',
     format: 'json',
   })
-  const raw = (await fetchJson(`${GEOCODING_URL}?${params}`)) as { results?: RawLocation[] } | null
-  return transformLocations(raw)
+  return transformLocations(await fetchJson(`${GEOCODING_URL}?${params}`))
 }

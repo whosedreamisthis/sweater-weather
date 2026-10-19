@@ -1,4 +1,4 @@
-import { ApiError, fetchJson } from './http'
+import { ApiError, fetchJson, isRecord, unexpectedResponse } from './http'
 import type { CurrentWeather, DailyPoint, Forecast, HourlyPoint, Units } from './types'
 
 const FORECAST_URL = 'https://api.open-meteo.com/v1/forecast'
@@ -48,6 +48,54 @@ export function validateCoordinates(lat: number, lon: number): void {
   const valid =
     Number.isFinite(lat) && Number.isFinite(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180
   if (!valid) throw new ApiError('Invalid coordinates.', 400)
+}
+
+const CURRENT_NUMBER_KEYS = [
+  'temperature_2m',
+  'apparent_temperature',
+  'relative_humidity_2m',
+  'is_day',
+  'weather_code',
+  'wind_speed_10m',
+  'wind_direction_10m',
+  'surface_pressure',
+] as const
+
+const HOURLY_KEYS = ['temperature_2m', 'precipitation_probability', 'weather_code'] as const
+
+const DAILY_KEYS = [
+  'weather_code',
+  'temperature_2m_max',
+  'temperature_2m_min',
+  'precipitation_probability_max',
+  'sunrise',
+  'sunset',
+  'uv_index_max',
+] as const
+
+/** A series block: `time` plus one array per key, each at least as long as `time`. */
+function hasSeries(value: unknown, keys: readonly string[]): boolean {
+  if (!isRecord(value) || !Array.isArray(value.time)) return false
+  const length = value.time.length
+  return keys.every((key) => {
+    const series = value[key]
+    return Array.isArray(series) && series.length >= length
+  })
+}
+
+export function isRawForecast(value: unknown): value is RawForecast {
+  if (!isRecord(value)) return false
+  const { current } = value
+  return (
+    Number.isFinite(value.latitude) &&
+    Number.isFinite(value.longitude) &&
+    typeof value.timezone === 'string' &&
+    isRecord(current) &&
+    typeof current.time === 'string' &&
+    CURRENT_NUMBER_KEYS.every((key) => Number.isFinite(current[key])) &&
+    hasSeries(value.hourly, HOURLY_KEYS) &&
+    hasSeries(value.daily, DAILY_KEYS)
+  )
 }
 
 function transformCurrent(c: RawForecast['current']): CurrentWeather {
@@ -110,6 +158,7 @@ export async function fetchForecast(lat: number, lon: number, units: Units): Pro
     precipitation_unit: units.precipitation,
     timezone: 'auto',
   })
-  const raw = (await fetchJson(`${FORECAST_URL}?${params}`)) as RawForecast
+  const raw = await fetchJson(`${FORECAST_URL}?${params}`)
+  if (!isRawForecast(raw)) throw unexpectedResponse()
   return transformForecast(raw)
 }

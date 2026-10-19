@@ -28,3 +28,4 @@ Completed
 - **Saved Locations:** Persisted favorites (deduped by coordinates, capped at 10) with a City page save button and Home cards with per-card weather; see `src/store/useAppStore.ts`, `src/components/favorites/`.
 - **Geolocation:** Click-only "Use my location" button beside search, rounded coordinates, reverse-geocoded city name and friendly error messages; see `src/hooks/useGeolocation.ts`, `src/components/UseMyLocationButton.tsx`.
 - **Vibrant Colors:** Saturated palette tokens, gradient page background and header underline, weather-tinted current-conditions card; see `src/index.css`, `src/components/current/CurrentWeather.module.css`.
+- **What to Wear:** Rule-based outfit card on the City page from feels-like, worst 6-hour rain chance, wind and UV; see `src/utils/outfit.ts`, `src/components/outfit/`.

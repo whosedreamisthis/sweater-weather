@@ -39,7 +39,7 @@ describe('Home favorites', () => {
     expect(screen.getByRole('heading', { name: 'Popular cities' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Tokyo/ })).toHaveAttribute(
       'href',
-      '/city/35.68/139.69?name=Tokyo',
+      '/city/35.68/139.69?name=Tokyo&country=Japan',
     )
     expect(screen.getByRole('heading', { name: 'How it works' })).toBeInTheDocument()
     expect((await screen.findAllByText(/14°C/)).length).toBeGreaterThan(0)
@@ -65,7 +65,7 @@ describe('Home favorites', () => {
       within(screen.getByRole('region', { name: 'Saved locations' })).getByRole('link', {
         name: /London/,
       }),
-    ).toHaveAttribute('href', '/city/51.5/-0.12?name=London')
+    ).toHaveAttribute('href', '/city/51.5/-0.12?name=London&country=United%20Kingdom')
   })
 
   it('removes a favorite', async () => {

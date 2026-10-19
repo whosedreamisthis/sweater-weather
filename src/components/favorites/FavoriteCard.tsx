@@ -12,7 +12,7 @@ type Props = {
 export function FavoriteCard({ location }: Props) {
   const removeFavorite = useAppStore((s) => s.removeFavorite)
   const { latitude, longitude, name } = location
-  const href = cityPath(latitude, longitude, name)
+  const href = cityPath(latitude, longitude, name, location.country)
 
   return (
     <li className={styles.card}>

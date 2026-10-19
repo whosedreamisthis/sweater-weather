@@ -37,6 +37,17 @@ describe('City page', () => {
     expect(document.title).toBe('London · SweaterWeather')
   })
 
+  it('saves the favorite with the country from the URL', async () => {
+    useAppStore.setState({ favorites: [] })
+    renderCity('/city/51.5/-0.12?name=London&country=United%20Kingdom')
+
+    await userEvent.click(await screen.findByRole('button', { name: /Save location/ }))
+
+    expect(useAppStore.getState().favorites).toMatchObject([
+      { name: 'London', country: 'United Kingdom', latitude: 51.5, longitude: -0.12 },
+    ])
+  })
+
   it('shows a skeleton while loading', () => {
     renderCity('/city/51.5/-0.12')
     expect(screen.getByLabelText('Loading current weather')).toBeInTheDocument()

@@ -20,7 +20,7 @@ export function PopularCities() {
       </h2>
       <ul className={styles.grid}>
         {POPULAR_CITIES.map((city) => {
-          const href = cityPath(city.latitude, city.longitude, city.name)
+          const href = cityPath(city.latitude, city.longitude, city.name, city.country)
           return (
             <li key={city.name} className={styles.card}>
               <Link to={href} className={styles.link}>

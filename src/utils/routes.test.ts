@@ -5,6 +5,16 @@ describe('cityPath', () => {
     expect(cityPath(51.51, -0.13, 'London')).toBe('/city/51.51/-0.13?name=London')
   })
 
+  it('appends the country when given', () => {
+    expect(cityPath(51.51, -0.13, 'London', 'United Kingdom')).toBe(
+      '/city/51.51/-0.13?name=London&country=United%20Kingdom',
+    )
+  })
+
+  it('omits an empty country', () => {
+    expect(cityPath(51.51, -0.13, 'London', '')).toBe('/city/51.51/-0.13?name=London')
+  })
+
   it('encodes names with spaces and special characters', () => {
     expect(cityPath(64.15, -21.94, 'Reykjavík & co')).toBe(
       '/city/64.15/-21.94?name=Reykjav%C3%ADk%20%26%20co',

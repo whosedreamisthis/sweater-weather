@@ -97,7 +97,7 @@ export function SearchBox() {
     setActiveIndex(-1)
     setQuery(city.name)
     setOpen(false)
-    navigate(cityPath(city.latitude, city.longitude, city.name))
+    navigate(cityPath(city.latitude, city.longitude, city.name, city.country))
   }
 
   return (

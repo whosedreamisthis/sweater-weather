@@ -26,6 +26,7 @@ export function City() {
   const lat = Number(params.lat)
   const lon = Number(params.lon)
   const givenName = search.get('name')?.trim()
+  const country = search.get('country')?.trim() ?? ''
 
   const now = useNow()
   const forecast = useForecast(lat, lon)
@@ -73,10 +74,12 @@ export function City() {
   return (
     <>
       <FavoriteButton
+        // Remount per place so a "list is full" message doesn't follow you to the next city.
+        key={`${lat},${lon}`}
         location={{
           id: 0,
           name,
-          country: '',
+          country,
           latitude: lat,
           longitude: lon,
           timezone: forecast.data.location.timezone,
